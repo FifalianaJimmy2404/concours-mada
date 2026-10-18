@@ -217,7 +217,19 @@ const quizBank = {
   ],
   logique: [
     {q:"Combien font 12 + 8 ?", options:["18","20","22"], answer:1, why:"12 + 8 = 20."},
-    {q:"Combien font 20 ÷ 4 ?", options:["4","5","6"], answer:1, why:"20 divisé par 4 égale 5."}
+    {q:"Combien font 20 ÷ 4 ?", options:["4","5","6"], answer:1, why:"20 divisé par 4 égale 5."},
+    {q:"Calculer (2 - i)².", options:["3 - 4i","5 - 4i","3 + 4i"], answer:0, why:"(2 - i)² = 4 - 4i + i² = 4 - 4i - 1 = 3 - 4i, car i² = -1."},
+    {q:"Quelles sont les solutions de i z² - i z + 1 + i = 0 ?", options:["z = -i et z = 1 + i","z = i et z = 1 - i","z = 2 et z = -1"], answer:0, why:"Le discriminant vaut 3 - 4i = (2 - i)². La formule quadratique donne les deux racines -i et 1 + i."},
+    {q:"Pour P(z) = z³ - (4 + i)z² + (7 + i)z - 4, quelle valeur est une racine réelle ?", options:["0","1","-1"], answer:1, why:"P(1) = 1 - (4 + i) + (7 + i) - 4 = 0. Donc 1 est une racine."},
+    {q:"Dans la factorisation P(z) = (z - 1)(z - 2 - 2i)(az + b), quelles sont les valeurs de a et b ?", options:["a = 1 et b = -1 + i","a = 2 et b = -1","a = 1 et b = 1 - i"], answer:0, why:"En développant les facteurs, le troisième facteur est z - 1 + i, donc a = 1 et b = -1 + i."},
+    {q:"Calculer U = (2 + 2i)/(1 - i).", options:["2i","2","1 + i"], answer:0, why:"On multiplie en haut et en bas par 1 + i : U = ((2 + 2i)(1 + i))/2 = 4i/2 = 2i."},
+    {q:"Dans le plan complexe, B a pour affixe 2 + 2i et C a pour affixe 1 - i. Quelle est la nature du triangle OBC ?", options:["Rectangle en O","Équilatéral","Rectangle en B"], answer:0, why:"Les vecteurs OB = (2,2) et OC = (1,-1) ont un produit scalaire 2 - 2 = 0. Ils sont perpendiculaires : le triangle est rectangle en O."},
+    {q:"Une similitude directe est donnée par z' = (1 - i)z - 1 + 2i. Quel est son rapport ?", options:["1","√2","2"], answer:1, why:"Le rapport est le module du coefficient 1 - i : |1 - i| = √(1² + (-1)²) = √2."},
+    {q:"Un bassin contient 10 poissons, dont 3 tanches. On en pêche 3 simultanément. Quelle est la probabilité de n'obtenir aucune tanche ?", options:["7/24","8/15","5/12"], answer:0, why:"Il y a 7 poissons qui ne sont pas des tanches. P = C(7,3)/C(10,3) = 35/120 = 7/24."},
+    {q:"Dans le même bassin, quelle est la probabilité d'obtenir au moins une carpe, sachant qu'il y a 2 carpes et 8 autres poissons ?", options:["8/15","7/24","5/12"], answer:0, why:"Par complément, P(au moins une carpe) = 1 - C(8,3)/C(10,3) = 1 - 56/120 = 64/120 = 8/15."},
+    {q:"Il y a 5 gardons et 5 poissons qui ne sont pas des gardons. Quelle est la probabilité d'obtenir exactement 2 gardons lors d'un tirage de 3 poissons ?", options:["5/12","7/24","8/15"], answer:0, why:"On choisit 2 gardons parmi 5 et 1 autre poisson parmi 5 : C(5,2) × C(5,1) / C(10,3) = 50/120 = 5/12."},
+    {q:"On répète 4 fois indépendamment un tirage où la probabilité de l'événement E vaut 5/12. Quelle est l'espérance du nombre X de réalisations de E ?", options:["5/3","35/36","5/12"], answer:0, why:"X suit une loi binomiale de paramètres n = 4 et p = 5/12. Son espérance vaut np = 4 × 5/12 = 5/3."},
+    {q:"Pour une loi binomiale de paramètres n = 4 et p = 5/12, quelle est la variance ?", options:["35/36","5/3","5/12"], answer:0, why:"V(X) = np(1-p) = 4 × 5/12 × 7/12 = 35/36."}
   ],
   culture: [
     {q:"Que faut-il faire avant de citer un fait ?", options:["Le vérifier","L'inventer","L'ignorer"], answer:0, why:"Il faut vérifier les informations auprès de sources fiables."},
