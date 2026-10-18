@@ -269,16 +269,72 @@ function stopDpgLesson() {
 }
 
 function showLesson() {
-  const lesson = lessonBank[currentSubject];
   stopDpgLesson();
   document.getElementById("subject-menu").hidden = true;
   document.getElementById("content-panel").hidden = false;
-  document.getElementById("content-title").textContent = lesson.title;
-  document.getElementById("content-body").textContent = lesson.content;
-  document.getElementById("dpg-audio-controls").hidden = currentSubject !== "droit";
   document.getElementById("quiz-feedback").textContent = "";
   document.getElementById("quiz-actions").innerHTML = "";
+
+  if (currentSubject === "droit") {
+    renderDpgLessonList();
+    document.getElementById("dpg-audio-controls").hidden = false;
+  } else {
+    const lesson = lessonBank[currentSubject];
+    document.getElementById("content-title").textContent = lesson.title;
+    document.getElementById("content-body").textContent = lesson.content;
+    document.getElementById("dpg-audio-controls").hidden = true;
+  }
+
   document.getElementById("content-panel").scrollIntoView({behavior:"smooth"});
+}
+
+function renderDpgLessonList() {
+  const body = document.getElementById("content-body");
+  document.getElementById("content-title").textContent =
+    "Droit pénal général — les 10 fiches DPG";
+
+  body.textContent = "";
+
+  const intro = document.createElement("p");
+  intro.textContent =
+    "Choisis une fiche pour consulter le document original. " +
+    "Le numéro indique la page de début dans le PDF.";
+  body.appendChild(intro);
+
+  const lessons = [
+    {n:"01", title:"L’infraction — définition et éléments constitutifs", page:1},
+    {n:"02", title:"La responsabilité pénale du délinquant", page:2},
+    {n:"03", title:"La tentative et la complicité", page:3},
+    {n:"04", title:"La récidive et le casier judiciaire", page:5},
+    {n:"05", title:"Étude d’un cas concret", page:6},
+    {n:"06", title:"Les différents modes de preuves", page:9},
+    {n:"07", title:"Les faits justificatifs de l’infraction", page:11},
+    {n:"08", title:"Cause de non-culpabilité", page:14},
+    {n:"09", title:"Les circonstances aggravantes et atténuantes", page:16},
+    {n:"10", title:"Cas concrets", page:19}
+  ];
+
+  lessons.forEach(lesson => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const heading = document.createElement("h3");
+    heading.textContent = "DPG " + lesson.n + " — " + lesson.title;
+    card.appendChild(heading);
+
+    const page = document.createElement("p");
+    page.textContent = "Page " + lesson.page + " du PDF";
+    card.appendChild(page);
+
+    const button = document.createElement("button");
+    button.className = "option";
+    button.textContent = "📄 Ouvrir cette fiche";
+    button.onclick = () => {
+      window.open("pdf/DPG.pdf#page=" + lesson.page, "_blank");
+    };
+    card.appendChild(button);
+    body.appendChild(card);
+  });
 }
 
 function startExercises() {
