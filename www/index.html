@@ -51,6 +51,7 @@ small{color:#617087}
 <button data-subject="francais" onclick="start('francais')">Français</button>
 <button data-subject="logique" onclick="start('logique')">Mathématiques</button>
 <button data-subject="droit" onclick="start('droit')">DPG — Droit pénal général</button>
+<button data-subject="scienceeco" onclick="start(\'scienceeco\')">Science économique</button>
 <button data-subject="malagasy" onclick="start('malagasy')">Malagasy</button>
 <button data-subject="ohabolana" onclick="start('ohabolana')">Ohabolana sy fomba fiteny</button>
 <button data-subject="tantara" onclick="start('tantara')">Histoire</button>
@@ -62,6 +63,7 @@ small{color:#617087}
   <p>Choisis ce que tu veux travailler.</p>
   <button onclick="showLesson()">📘 Leçons</button>
   <button onclick="startExercises()">✍️ Exercices</button>
+<button id="dpg-dissertation-button" onclick="openDissertations()" hidden>📝 Dissertations juridiques — ACMIL</button>
   <button id="dpg-pdf-button" onclick="openDpgPdf()" hidden>📄 Consulter la fiche PDF DPG</button>
   <button class="option" onclick="backToSubjects()">← Retour aux matières</button>
 </section>
@@ -105,7 +107,7 @@ function chooseContest(code) {
   selectedContest = code;
 
   const subjectsByContest = {
-    acmil: ["malagasy", "francais", "droit", "tantara", "logique", "culture"],
+    acmil: ["malagasy", "francais", "droit", "tantara", "logique", "culture", "scienceeco"],
     gendarmes: ["culture", "francais", "logique", "malagasy", "tantara"],
     agentPolice: ["culture", "francais", "malagasy", "tantara"],
     officierPolice: ["culture", "francais", "malagasy", "tantara", "droit", "logique"],
@@ -129,6 +131,7 @@ function chooseContest(code) {
 
 
 const subjectNames = {
+  scienceeco: "Science économique",
   malagasy: "Malagasy",
   francais: "Français",
   droit: "DPG — Droit pénal général",
@@ -163,6 +166,11 @@ const lessonBank = {
     title: "Culture générale — Méthode",
     content: "LEÇON 1 — Comprendre une question\n\nLis attentivement la question et repère le sujet principal.\n\nPour mémoriser une information, retiens le nom, la date, le lieu et son importance. Vérifie les faits auprès de sources fiables."
   },
+
+  scienceeco: {
+    title: "Science économique — Traditions et progrès",
+    content: "MÉTHODE DE DISSERTATION\n\nSujet : Dans les pays en développement, le poids des traditions freine-t-il le progrès ?\n\nIntroduction : présente le sujet, explique les mots importants, pose la problématique et annonce le plan.\n\nI. Certaines traditions peuvent freiner le progrès lorsqu'elles empêchent l'accès à l'éducation, bloquent les innovations utiles ou entretiennent des inégalités. Chaque argument doit être accompagné d'un exemple précis et vérifiable.\n\nII. D'autres traditions favorisent le développement : solidarité communautaire, entraide, transmission des savoir-faire et coopération dans les activités agricoles.\n\nIII. Il faut distinguer les pratiques utiles de celles qui entravent les droits, l'éducation ou l'innovation. Le progrès peut préserver les valeurs positives tout en faisant évoluer les pratiques nuisibles.\n\nConclusion : les traditions ne freinent donc pas toujours le progrès. Leurs effets dépendent des pratiques et de leur adaptation aux besoins de la société."
+  },
   ohabolana: {
     title: "Ohabolana sy fomba fiteny",
     content: "LESONA 1 — Ny ohabolana\n\nNy ohabolana dia teny fohy mirakitra fahendrena sy torohevitra.\n\nOhatra: « Ny tody tsy misy fa ny atao no miverina. »\n\nAmpiasaina ny ohabolana mba hanazavana hevitra na hanomezana torohevitra. Diniho ny heviny arakaraka ny toe-javatra."
@@ -179,8 +187,21 @@ const quizBank = {
     {q:"Dans « Les candidats révisent », quel est le verbe ?", options:["Les","candidats","révisent"], answer:2, why:"« Révisent » est le verbe."}
   ],
   droit: [
-    {q:"Quel élément correspond au texte qui prévoit l'infraction ?", options:["Légal","Matériel","Moral"], answer:0, why:"L'élément légal renvoie au texte pénal applicable."},
-    {q:"Quel élément concerne le comportement réalisé ?", options:["Moral","Matériel","Légal"], answer:1, why:"L'élément matériel concerne le comportement."}
+    {q:"Quels sont les trois éléments classiquement étudiés pour caractériser une infraction ?", options:["Légal, matériel et moral","Civil, administratif et fiscal","Intention, sanction et recours","Preuve, jugement et appel"], answer:0, why:"On examine classiquement l'élément légal, l'élément matériel et l'élément moral, sous réserve des exigences propres à l'infraction."},
+    {q:"À quoi correspond l'élément légal ?", options:["Au dommage subi seulement","Au texte applicable qui prévoit l'infraction et la peine","Au témoignage d'un voisin","À la décision de la victime"], answer:1, why:"L'élément légal exige un fondement légal applicable. Il faut vérifier le texte malgache en vigueur avant de citer un article."},
+    {q:"Que faut-il examiner pour établir l'élément matériel ?", options:["Uniquement la réputation du suspect","Les actes ou omissions et les circonstances prouvées","Seulement les regrets exprimés","L'opinion du public"], answer:1, why:"L'élément matériel porte sur le comportement et, selon l'infraction, sur le résultat ou les circonstances exigées."},
+    {q:"Que désigne généralement l'élément moral ?", options:["L'état d'esprit exigé par l'infraction","Le lieu du tribunal","Le montant des frais de justice","La liste des témoins"], answer:0, why:"L'élément moral peut notamment concerner l'intention ou la faute exigée par le texte applicable."},
+    {q:"Une condamnation antérieure suffit-elle toujours à caractériser la récidive légale ?", options:["Oui, dans tous les cas","Non, les conditions légales doivent être vérifiées","Oui, si les faits sont connus du public","Non, car la récidive n'existe jamais"], answer:1, why:"La récidive dépend de conditions prévues par la loi, notamment celles relatives à la condamnation antérieure et à la nouvelle infraction."},
+    {q:"Quelle est la première étape utile pour résoudre un cas pratique ?", options:["Choisir immédiatement la peine","Relever et résumer les faits pertinents","Inventer les faits manquants","Rédiger la conclusion sans analyse"], answer:1, why:"Il faut commencer par identifier les faits établis, les personnes et le rôle de chacune, sans ajouter de suppositions."},
+    {q:"Quel est le rôle principal des preuves dans une affaire pénale ?", options:["Confirmer obligatoirement la première accusation","Aider à établir les faits et à examiner les différentes hypothèses","Remplacer les règles de droit","Garantir une condamnation"], answer:1, why:"Les éléments de preuve doivent être examinés avec rigueur, y compris ceux susceptibles de contredire une accusation."},
+    {q:"La légitime défense est-elle automatiquement reconnue dès qu'une personne affirme avoir été agressée ?", options:["Oui, toujours","Non, les circonstances et les conditions légales doivent être examinées","Oui, si elle est en colère","Non, car elle n'est jamais admise"], answer:1, why:"Il faut vérifier les circonstances de l'agression et les conditions prévues par le droit applicable, notamment la nécessité et la proportionnalité lorsque requises."},
+    {q:"Quelle distinction est essentielle entre fait justificatif et cause de non-culpabilité ?", options:["Ils ont toujours exactement le même effet","Le fait justificatif concerne la justification de l'acte, tandis qu'une cause de non-culpabilité peut affecter l'imputabilité ou la culpabilité","Le premier concerne seulement les témoins","La seconde concerne uniquement les dommages matériels"], answer:1, why:"Ce sont des notions distinctes. Leur qualification et leurs effets précis doivent être vérifiés dans le droit applicable."},
+    {q:"Une circonstance aggravante peut-elle être imputée automatiquement à tous les participants ?", options:["Oui, dès qu'ils sont plusieurs","Non, il faut examiner les faits, le rôle de chacun et les règles applicables","Oui, si l'un d'eux est armé","Oui, dès qu'une infraction est commise la nuit"], answer:1, why:"La responsabilité et les circonstances applicables doivent être examinées individuellement selon les faits prouvés et la loi."},
+    {q:"Dans un cas pratique, que doit contenir l'application de la règle de droit ?", options:["Un résumé sans raisonnement","Une mise en relation des conditions juridiques et des faits établis","Une opinion personnelle uniquement","Une citation d'article non vérifiée"], answer:1, why:"Il faut confronter chaque condition juridique aux faits prouvés, puis tirer une conclusion motivée."},
+    {q:"Quel plan est généralement adapté à une dissertation juridique ?", options:["Une liste de phrases sans ordre","Deux parties cohérentes, avec des sous-parties argumentées","Une introduction seule","Une conclusion avant toute analyse"], answer:1, why:"Un plan structuré permet de répondre progressivement à la problématique. Il doit rester adapté au sujet précis."},
+    {q:"Quel élément est indispensable dans une introduction de dissertation juridique ?", options:["Une problématique claire et l'annonce du plan","Une réponse sans justification","Des articles inventés","Une liste de noms sans rapport avec le sujet"], answer:0, why:"Après l'entrée en matière et la définition des termes, l'introduction présente l'intérêt du sujet, la problématique et le plan."},
+    {q:"Que faire lorsqu'un sujet demande d'examiner la responsabilité de deux personnes ?", options:["Attribuer les mêmes actes aux deux sans vérifier","Analyser séparément les actes, le rôle et les éléments concernant chacune","Ignorer les preuves","Décider uniquement selon les déclarations d'une personne"], answer:1, why:"Le raisonnement doit individualiser les faits et la responsabilité potentielle de chaque personne."},
+    {q:"Peut-on citer un article de loi malgache sans avoir vérifié son contenu et son applicabilité ?", options:["Oui, si le numéro paraît vraisemblable","Non, il faut vérifier le texte applicable et sa version en vigueur","Oui, pour rendre la copie plus longue","Oui, si un autre pays utilise une règle similaire"], answer:1, why:"Une copie juridique doit éviter les références inventées ou périmées. Vérifie les textes malgaches applicables au sujet."}
   ],
   tantara: [
     {q:"Quel outil présente les événements dans l'ordre des dates ?", options:["Une chronologie","Un dictionnaire","Une carte météo"], answer:0, why:"La chronologie ordonne les événements dans le temps."},
@@ -194,11 +215,138 @@ const quizBank = {
     {q:"Que faut-il faire avant de citer un fait ?", options:["Le vérifier","L'inventer","L'ignorer"], answer:0, why:"Il faut vérifier les informations auprès de sources fiables."},
     {q:"Quel repère aide à situer un événement dans le temps ?", options:["Une date","Une couleur","Un adjectif"], answer:0, why:"La date situe l'événement dans le temps."}
   ],
+
+  scienceeco: [
+    {
+      q: "Quel est le sujet proposé en science économique ?",
+      options: ["Les traditions et le progrès dans les pays en développement", "Les volcans", "Le système solaire", "Les saisons"],
+      answer: 0,
+      why: "Le sujet demande d'étudier si les traditions freinent le progrès dans les pays en développement."
+    },
+    {
+      q: "Comment faut-il justifier les arguments ?",
+      options: ["Sans exemple", "Avec des exemples précis", "En répétant le sujet", "Avec des idées sans rapport"],
+      answer: 1,
+      why: "La consigne demande de justifier les réponses par des exemples précis."
+    },
+    {
+      q: "Les traditions freinent-elles toujours le développement ?",
+      options: ["Oui, toutes sont nuisibles", "Non, aucune ne peut le freiner", "Cela dépend des pratiques et du contexte", "Le développement exclut toute culture"],
+      answer: 2,
+      why: "Une bonne dissertation examine les effets négatifs et positifs des traditions."
+    },
+    {
+      q: "Quel exemple illustre un effet positif possible d'une tradition ?",
+      options: ["L'entraide communautaire dans les travaux agricoles", "Le refus de toute éducation", "Le blocage de toutes les innovations", "La diffusion de fausses informations"],
+      answer: 0,
+      why: "L'entraide peut mobiliser des ressources humaines et soutenir les activités économiques."
+    },
+    {
+      q: "Que doit faire la conclusion ?",
+      options: ["Introduire un sujet sans rapport", "Répondre à la problématique et résumer les arguments", "Répéter uniquement le titre", "Supprimer la réponse au sujet"],
+      answer: 1,
+      why: "La conclusion répond clairement à la question posée à partir des arguments développés."
+    }
+  ],
   ohabolana: [
     {q:"Inona no raketin'ny ohabolana ?", options:["Fahendrena","Kajy ihany","Anaran'olona foana"], answer:0, why:"Matetika ny ohabolana dia mirakitra fahendrena sy torohevitra."},
     {q:"Rahoviana no tokony handinihana ny hevitry ny ohabolana ?", options:["Araka ny toe-javatra","Tsy ilaina mihitsy","Amin'ny isa ihany"], answer:0, why:"Diniho araka ny toe-javatra ampiasana azy."}
   ]
 };
+
+
+const dissertationBank = [
+  {
+    title: "La responsabilité pénale",
+    problem: "Dans quelles conditions une personne peut-elle être tenue pénalement responsable ?",
+    plan: "I. Les conditions de la responsabilité pénale\nA. L'existence d'une infraction prévue par la loi\nB. L'imputabilité et les conditions de culpabilité\n\nII. La détermination de la responsabilité\nA. L'examen des causes éventuelles d'irresponsabilité\nB. L'appréciation du rôle et des actes de chaque personne",
+    advice: "Définis la responsabilité pénale, distingue les éléments de l'infraction et examine les causes possibles d'irresponsabilité. Vérifie les règles malgaches applicables avant de citer des articles."
+  },
+  {
+    title: "La tentative punissable",
+    problem: "Comment distinguer la tentative punissable des actes préparatoires et du désistement volontaire ?",
+    plan: "I. Les conditions de la tentative\nA. Le commencement d'exécution\nB. L'absence de consommation de l'infraction\n\nII. L'appréciation de la tentative\nA. Les circonstances de l'interruption\nB. Les conséquences juridiques prévues par la loi applicable",
+    advice: "Explique les notions, puis illustre-les avec un exemple. Ne conclus pas automatiquement à une tentative punissable sans vérifier les conditions légales."
+  },
+  {
+    title: "L'auteur, le coauteur et le complice",
+    problem: "Comment distinguer l'auteur de l'infraction, le coauteur et le complice ?",
+    plan: "I. L'identification de la participation à l'infraction\nA. L'acte de l'auteur et du coauteur\nB. L'aide ou l'assistance susceptible de caractériser la complicité\n\nII. La détermination de la responsabilité de chacun\nA. La preuve du rôle et de l'intention requis\nB. Les conséquences prévues par le droit applicable",
+    advice: "Utilise des exemples concrets. Distingue les faits prouvés, le rôle de chaque participant et les conditions juridiques de la complicité."
+  },
+  {
+    title: "La légitime défense",
+    problem: "À quelles conditions la légitime défense peut-elle justifier un acte ?",
+    plan: "I. Les conditions de la légitime défense\nA. L'existence d'une agression répondant aux critères légaux\nB. La nécessité et la proportionnalité de la défense, selon le droit applicable\n\nII. L'appréciation de la situation\nA. L'examen précis des circonstances\nB. Les conséquences juridiques si les conditions sont ou ne sont pas réunies",
+    advice: "Présente les conditions juridiques, puis applique-les à des faits précis. Ne confonds pas vengeance et défense face à une agression."
+  },
+  {
+    title: "Les éléments constitutifs de l'infraction",
+    problem: "Pourquoi l'étude des éléments constitutifs est-elle essentielle à la qualification pénale ?",
+    plan: "I. L'identification des éléments de l'infraction\nA. L'élément légal\nB. Les éléments matériel et moral\n\nII. L'application aux faits\nA. La vérification de chaque élément\nB. La qualification juridique et ses conséquences",
+    advice: "Définis chaque élément et illustre-le. Dans un cas concret, vérifie séparément chaque condition avant de conclure."
+  }
+];
+
+
+const dpgLessonQuizBank = [
+  [
+    {q:"Quel élément exige un fondement dans la loi pénale applicable ?",options:["Légal","Matériel","Moral","Civil"],answer:0,why:"L'élément légal exige un texte applicable qui prévoit l'infraction."},
+    {q:"Quel élément concerne le comportement reproché ?",options:["La réputation","L'élément matériel","Le jugement moral du public","La sanction seule"],answer:1,why:"L'élément matériel concerne les actes ou omissions exigés par l'infraction."}
+  ],
+  [
+    {q:"Que faut-il examiner pour étudier la responsabilité pénale ?",options:["Seulement la rumeur","Les faits, les éléments de l'infraction et l'imputabilité","Uniquement la profession","Seulement les excuses"],answer:1,why:"La responsabilité doit être appréciée à partir des faits prouvés et des conditions légales."},
+    {q:"Une personne est-elle automatiquement responsable dès qu'un dommage survient ?",options:["Oui toujours","Non, il faut examiner les conditions juridiques","Oui si elle est présente","Oui si la victime l'affirme"],answer:1,why:"Le dommage seul ne suffit pas nécessairement : il faut analyser l'infraction et les conditions de responsabilité."}
+  ],
+  [
+    {q:"Que faut-il rechercher pour caractériser une tentative punissable ?",options:["Uniquement une idée","Les conditions légales, dont le commencement d'exécution","Seulement une accusation","Un simple projet sans autre élément"],answer:1,why:"La tentative dépend des conditions prévues par le droit applicable. Les actes préparatoires ne suffisent pas automatiquement."},
+    {q:"Pour examiner une complicité alléguée, que faut-il vérifier ?",options:["La simple présence uniquement","Le rôle joué, les actes d'aide éventuels et les conditions légales","La réputation du suspect","L'opinion des voisins"],answer:1,why:"Il faut examiner les actes établis et les conditions juridiques de la complicité."}
+  ],
+  [
+    {q:"Une condamnation antérieure suffit-elle toujours à établir la récidive légale ?",options:["Oui","Non, les conditions légales doivent être vérifiées","Oui, si elle est ancienne","Oui, si elle est connue du public"],answer:1,why:"La récidive dépend des conditions précises prévues par les textes applicables."},
+    {q:"Pourquoi faut-il vérifier les règles relatives au casier judiciaire ?",options:["Parce que les informations et accès sont encadrés","Parce que tous les documents sont publics","Parce qu'un casier prouve toujours une nouvelle infraction","Parce qu'il remplace le procès"],answer:0,why:"Le contenu et l'accès aux informations du casier dépendent des règles applicables."}
+  ],
+  [
+    {q:"Quelle est une bonne première étape d'un cas pratique ?",options:["Inventer les faits manquants","Identifier les faits pertinents","Annoncer directement une peine","Ignorer les personnes impliquées"],answer:1,why:"Il faut résumer les faits établis sans ajouter de suppositions."},
+    {q:"À quoi sert l'application de la règle de droit ?",options:["À relier les conditions juridiques aux faits établis","À répéter uniquement l'énoncé","À remplacer les preuves","À donner une opinion personnelle"],answer:0,why:"L'application confronte les règles aux faits pour justifier une conclusion."}
+  ],
+  [
+    {q:"Quel est le rôle des preuves dans une affaire pénale ?",options:["Garantir une condamnation","Aider à établir les faits","Remplacer la loi","Confirmer obligatoirement la première hypothèse"],answer:1,why:"Les preuves doivent être examinées de façon rigoureuse, y compris celles qui peuvent contredire l'accusation."},
+    {q:"Que faut-il vérifier au sujet d'un élément matériel recueilli ?",options:["Son authenticité et sa fiabilité","Uniquement sa couleur","La réputation du suspect","Le nombre de personnes qui en parlent"],answer:0,why:"L'origine, l'authenticité, la conservation et la fiabilité de la preuve doivent être examinées."}
+  ],
+  [
+    {q:"La légitime défense est-elle automatique dès qu'une personne affirme avoir été agressée ?",options:["Oui","Non, il faut vérifier les circonstances et les conditions légales","Oui si elle est en colère","Oui si l'agression est racontée par un ami"],answer:1,why:"La réalité de l'agression et les conditions légales doivent être examinées."},
+    {q:"Que doit-on examiner pour apprécier une défense face à une agression ?",options:["Uniquement la colère","Les circonstances, la nécessité et la proportionnalité lorsque requises","Uniquement le lieu de résidence","Seulement l'opinion du public"],answer:1,why:"L'analyse dépend des circonstances précises et des conditions prévues par le droit applicable."}
+  ],
+  [
+    {q:"Une cause de non-culpabilité peut-elle concerner la capacité de comprendre ou la liberté d'agir ?",options:["Oui, selon les conditions légales","Non, jamais","Uniquement le montant des dommages","Seulement le témoignage"],answer:0,why:"Certaines causes peuvent affecter l'imputabilité ou la culpabilité, selon les critères légaux."},
+    {q:"Une affirmation de contrainte suffit-elle à établir une cause de non-culpabilité ?",options:["Oui automatiquement","Non, la réalité et les conditions légales doivent être examinées","Oui si elle est répétée","Non, la contrainte n'est jamais étudiée"],answer:1,why:"Les circonstances et les critères juridiques applicables doivent être vérifiés."}
+  ],
+  [
+    {q:"Que faut-il examiner pour appliquer une circonstance aggravante ?",options:["Les faits établis et les conditions prévues par la loi","Uniquement la réputation","La seule opinion de la victime","La présence de plusieurs personnes, sans autre examen"],answer:0,why:"Une circonstance aggravante doit correspondre aux conditions prévues par le texte applicable."},
+    {q:"Une circonstance concernant un participant s'applique-t-elle automatiquement à tous les autres ?",options:["Toujours","Non, le rôle de chacun et les règles applicables doivent être examinés","Oui si les personnes se connaissent","Oui si les faits se sont déroulés la nuit"],answer:1,why:"La situation de chaque participant doit être analysée au regard des faits prouvés et du droit applicable."}
+  ],
+  [
+    {q:"Dans un cas impliquant plusieurs personnes, comment faut-il raisonner ?",options:["Attribuer les mêmes actes à tous","Examiner séparément les actes et le rôle de chacun","Choisir le responsable au hasard","Ignorer les preuves"],answer:1,why:"Il faut individualiser l'analyse et justifier la conclusion pour chaque personne."},
+    {q:"Que faire si des faits importants manquent dans l'énoncé ?",options:["Les inventer","Signaler ce qui doit être vérifié avant de conclure","Les ignorer systématiquement","Citer un article au hasard"],answer:1,why:"Une réponse rigoureuse distingue les faits établis des éléments manquants et explique leurs conséquences."}
+  ]
+];
+
+const dpgLessonTitles = [
+  "DPG 01 — L'infraction pénale",
+  "DPG 02 — La responsabilité pénale",
+  "DPG 03 — Tentative et complicité",
+  "DPG 04 — Récidive et casier judiciaire",
+  "DPG 05 — Étude d'un cas concret",
+  "DPG 06 — Les différents modes de preuve",
+  "DPG 07 — Les faits justificatifs",
+  "DPG 08 — Les causes de non-culpabilité",
+  "DPG 09 — Circonstances aggravantes et atténuantes",
+  "DPG 10 — Cas pratiques et raisonnement"
+];
+
+let activeQuestions = null;
+let activeQuizTitle = "";
 
 let currentSubject = "";
 let currentQuestion = 0;
@@ -211,7 +359,8 @@ function start(subject) {
   document.getElementById("subjects").hidden = true;
   document.getElementById("content-panel").hidden = true;
   document.getElementById("subject-menu-title").textContent = subjectNames[subject];
-  document.getElementById("dpg-pdf-button").hidden = subject !== "droit";
+  document.getElementById("dpg-pdf-button").hidden = true;
+  document.getElementById("dpg-dissertation-button").hidden = subject !== "droit";
   document.getElementById("subject-menu").hidden = false;
   document.getElementById("subject-menu").scrollIntoView({behavior:"smooth"});
 }
@@ -288,52 +437,407 @@ function showLesson() {
   document.getElementById("content-panel").scrollIntoView({behavior:"smooth"});
 }
 
+
+const dpgLessons = [
+  {
+    title: "DPG 01 — L’infraction et ses éléments constitutifs",
+    content: `DÉFINITION
+Une infraction est un comportement interdit par la loi pénale et susceptible d'une sanction.
+
+LES TROIS ÉLÉMENTS
+1. Élément légal : un texte applicable prévoit et réprime le comportement.
+2. Élément matériel : un acte ou une omission est réalisé.
+3. Élément moral : l'intention, l'imprudence ou la négligence exigée par la loi est établie.
+
+ACTION ET OMISSION
+L'action consiste à faire ce qui est interdit. L'omission consiste à ne pas accomplir un acte exigé par la loi, lorsque les conditions légales sont réunies.
+
+EXEMPLE
+Lorsqu'un objet disparaît dans un magasin, il faut établir les faits, vérifier le texte applicable et rechercher les éléments nécessaires avant de conclure à une infraction.
+
+À RETENIR
+Élément légal, matériel et moral : trois points à examiner.`
+  },
+  {
+    title: "DPG 02 — La responsabilité pénale",
+    content: `NOTIONS ESSENTIELLES
+• Imputabilité : possibilité d'attribuer juridiquement les faits à une personne.
+• Culpabilité : appréciation de la faute selon les règles applicables.
+• Responsabilité pénale : possibilité de répondre pénalement des faits.
+
+RESPONSABILITÉ PERSONNELLE
+Le rôle de chaque personne doit être établi individuellement. Être présent sur les lieux ne prouve pas, à lui seul, une participation à l'infraction.
+
+POINTS À VÉRIFIER
+Les éléments de l'infraction, le rôle de la personne, son état au moment des faits et l'existence éventuelle d'une cause légale de justification ou d'exonération.
+
+EXEMPLE
+Lors d'une bagarre, il faut distinguer les personnes qui ont frappé, celles qui ont éventuellement aidé et les simples témoins.
+
+À RETENIR
+La responsabilité s'analyse à partir des faits établis et du droit applicable.`
+  },
+  {
+    title: "DPG 03 — La tentative et la complicité",
+    content: `LA TENTATIVE
+Il faut notamment examiner le commencement d'exécution et les raisons pour lesquelles l'infraction n'a pas été consommée. La simple intention ou la préparation ne suffit pas nécessairement.
+
+LA COMPLICITÉ
+La complicité suppose une participation répondant aux conditions prévues par la loi, par exemple une aide ou une assistance intentionnelle.
+
+DISTINGUER LES RÔLES
+• Auteur : réalise les actes constitutifs de l'infraction.
+• Coauteur : participe directement à sa réalisation avec d'autres.
+• Complice : apporte une aide ou une participation répondant aux conditions légales.
+• Receleur : peut commettre une infraction distincte liée au produit d'une infraction.
+
+EXEMPLE
+Une personne prend des biens dans une boutique tandis qu'une autre fait le guet. Il faut établir le rôle de chacun et vérifier les règles applicables.
+
+À RETENIR
+Ne confonds pas préparation, tentative, auteur, coauteur et complice.`
+  },
+  {
+    title: "DPG 04 — La récidive et le casier judiciaire",
+    content: `LA RÉCIDIVE
+Elle concerne, sous les conditions prévues par la loi, une nouvelle infraction commise après une condamnation antérieure définitive.
+
+EFFET POSSIBLE
+La récidive peut entraîner un régime de peine plus sévère si toutes les conditions légales sont réunies. Les délais et conditions exacts doivent être vérifiés dans les textes en vigueur.
+
+LE CASIER JUDICIAIRE
+Il centralise des informations sur les condamnations selon les règles applicables. Le document de cours distingue plusieurs bulletins, dont l'accès et le contenu ne sont pas identiques.
+
+EXEMPLE
+Avant de conclure qu'une personne est récidiviste, il faut vérifier la condamnation antérieure et les conditions légales.
+
+À RETENIR
+Une condamnation antérieure ne suffit pas toujours à caractériser juridiquement la récidive.`
+  },
+  {
+    title: "DPG 05 — Étude d’un cas concret",
+    content: `MÉTHODE EN CINQ ÉTAPES
+1. Relever les faits importants.
+2. Identifier chaque personne et ses actes.
+3. Repérer les infractions possibles.
+4. Vérifier les éléments constitutifs et les circonstances.
+5. Appliquer la règle aux faits et conclure.
+
+PLAN DE RÉPONSE
+• Faits pertinents.
+• Problème juridique.
+• Règle de droit applicable.
+• Application aux faits.
+• Conclusion motivée.
+
+EXEMPLE
+Deux personnes entrent dans un magasin. L'une prend de l'argent et l'autre a fourni les outils. Il faut examiner les actes et les preuves concernant chacune.
+
+À RETENIR
+Une bonne réponse justifie chaque qualification au lieu de simplement affirmer qu'une infraction existe.`
+  },
+  {
+    title: "DPG 06 — Les différents modes de preuve",
+    content: `À QUOI SERT LA PREUVE ?
+La preuve aide à établir les faits. Une enquête rigoureuse examine les éléments à charge et ceux qui peuvent innocenter une personne.
+
+PRINCIPAUX TYPES DE PREUVES
+1. Écrits : documents et registres pertinents.
+2. Témoignages : déclarations de personnes ayant des informations sur les faits.
+3. Aveu : déclaration par laquelle une personne reconnaît certains faits.
+4. Indices matériels : traces, objets, empreintes ou rapports d'expertise.
+
+PRÉCAUTIONS
+L'authenticité, l'origine et la conservation des éléments doivent être examinées. Un témoignage peut être imprécis et un aveu ne doit pas être obtenu par contrainte ou par des méthodes illicites.
+
+EXEMPLE
+Après un cambriolage, les témoignages peuvent être comparés aux traces et aux objets recueillis selon la procédure.
+
+À RETENIR
+Il faut examiner la fiabilité des éléments et respecter les droits de la défense.`
+  },
+  {
+    title: "DPG 07 — Les faits justificatifs",
+    content: `DÉFINITION
+Un fait justificatif est une circonstance reconnue par le droit qui peut justifier un acte si les conditions légales sont réunies.
+
+NOTIONS ÉTUDIÉES
+• Ordre de la loi ou commandement d'une autorité légitime, dans les limites prévues.
+• Légitime défense.
+• État de nécessité.
+• Consentement de la victime, dont l'effet dépend de l'acte et de la loi applicable.
+
+LÉGITIME DÉFENSE
+Il faut examiner la réalité de l'agression, son actualité, la nécessité de la défense et sa proportionnalité, selon les règles applicables.
+
+ÉTAT DE NÉCESSITÉ
+Il faut analyser le danger, les autres moyens disponibles et la proportion entre le danger évité et l'atteinte causée.
+
+EXEMPLE
+Une personne affirme avoir repoussé une agression. Les circonstances précises doivent être établies avant de conclure à la légitime défense.
+
+À RETENIR
+Un fait justificatif n'est jamais automatique : ses conditions doivent être démontrées.`
+  },
+  {
+    title: "DPG 08 — Les causes de non-culpabilité",
+    content: `PRINCIPE
+Certaines circonstances peuvent affecter la capacité de comprendre ses actes ou la liberté de sa volonté. Leur effet dépend des critères prévus par le droit applicable.
+
+THÈMES DU COURS
+• Trouble mental au moment des faits, évalué selon les critères juridiques et, si nécessaire, par une expertise.
+• Contrainte : force ou pression à laquelle la personne ne pouvait pas résister, selon les conditions légales.
+• Minorité : le régime dépend de l'âge et des textes applicables.
+
+DISTINCTION IMPORTANTE
+Une cause de non-culpabilité porte sur l'imputabilité ou la culpabilité de la personne. Un fait justificatif porte sur la justification de l'acte.
+
+EXEMPLE
+Une personne affirme avoir agi sous une menace irrésistible. Il faut vérifier la réalité de la menace et les conditions prévues par la loi.
+
+À RETENIR
+Les seuils d'âge et les conditions exactes doivent être vérifiés dans les textes malgaches en vigueur.`
+  },
+  {
+    title: "DPG 09 — Circonstances aggravantes et atténuantes",
+    content: `CIRCONSTANCES AGGRAVANTES
+Ce sont des facteurs prévus par la loi qui peuvent modifier la qualification ou augmenter la peine. Leur effet dépend de l'infraction et du texte applicable.
+
+CIRCONSTANCES ATTÉNUANTES
+Certaines circonstances peuvent être prises en compte par la juridiction dans les limites prévues par la loi. Elles ne garantissent pas automatiquement une réduction de peine.
+
+EXAMEN INDIVIDUEL
+Il faut déterminer quelles circonstances sont établies et à quelle personne elles se rapportent. La violence commise par un participant ne doit pas être automatiquement attribuée à tous les autres sans examen de leur rôle et des règles applicables.
+
+EXEMPLE
+Lors d'un vol à plusieurs, il faut examiner séparément la participation de chacun, l'existence d'une arme et les actes effectivement prouvés.
+
+À RETENIR
+Les circonstances et leurs conséquences juridiques doivent être établies selon les textes en vigueur.`
+  },
+  {
+    title: "DPG 10 — Cas pratiques et raisonnement",
+    content: `MÉTHODE
+1. Résumer les faits sans ajouter d'informations.
+2. Identifier les personnes et leur rôle.
+3. Examiner les infractions possibles.
+4. Vérifier les éléments constitutifs et les preuves.
+5. Examiner les circonstances aggravantes, atténuantes ou justificatives.
+6. Conclure séparément pour chaque personne.
+
+CAS PRATIQUE 1
+Deux personnes entrent de nuit dans un commerce et prennent de l'argent. Pendant leur fuite, l'une frappe un gardien avec un bâton.
+
+QUESTIONS À EXAMINER
+• Qui a accompli chaque acte ?
+• Que savait ou voulait chaque participant ?
+• Les violences peuvent-elles être imputées à chacun selon les faits établis et la loi ?
+• Quels éléments de preuve sont disponibles ?
+
+CAS PRATIQUE 2
+Une personne fournit des informations sur une maison à des cambrioleurs. Un occupant tue l'un d'eux avec une arme à feu.
+
+QUESTIONS À EXAMINER
+• Quel rôle a joué chaque participant au cambriolage ?
+• Les actes de l'occupant peuvent-ils relever d'une justification légale ? Il faut examiner les circonstances exactes.
+• Quels faits et quelles preuves manquent pour conclure ?
+
+À RETENIR
+Une solution juridique doit reposer sur les faits prouvés et les règles applicables, jamais sur des suppositions.`
+  }
+];
+
+
+function openDissertations() {
+  document.getElementById("subject-menu").hidden = true;
+  document.getElementById("content-panel").hidden = false;
+  document.getElementById("content-title").textContent =
+    "Dissertations juridiques — Préparation ACMIL";
+
+  const body = document.getElementById("content-body");
+  body.textContent =
+    "Choisis un sujet. Étudie la problématique et le plan proposé, puis rédige ta dissertation et évalue ton travail sur 20.";
+
+  const actions = document.getElementById("quiz-actions");
+  actions.textContent = "";
+  document.getElementById("quiz-feedback").textContent = "";
+
+  dissertationBank.forEach((item, index) => {
+    const button = document.createElement("button");
+    button.className = "option";
+    button.textContent = (index + 1) + ". " + item.title;
+    button.onclick = () => showDissertation(index);
+    actions.appendChild(button);
+  });
+
+  const back = document.createElement("button");
+  back.className = "option";
+  back.textContent = "← Retour à la matière";
+  back.onclick = backToSubjectMenu;
+  actions.appendChild(back);
+
+  document.getElementById("content-panel").scrollIntoView({behavior:"smooth"});
+}
+
+function showDissertation(index) {
+  const item = dissertationBank[index];
+  if (!item) return;
+
+  const body = document.getElementById("content-body");
+  body.textContent =
+    "PROBLÉMATIQUE\n" + item.problem +
+    "\n\nPLAN PROPOSÉ\n" + item.plan +
+    "\n\nCONSEILS\n" + item.advice;
+
+  document.getElementById("content-title").textContent = item.title;
+
+  const actions = document.getElementById("quiz-actions");
+  actions.textContent = "";
+  document.getElementById("quiz-feedback").textContent = "";
+
+  const heading = document.createElement("h3");
+  heading.textContent = "Ma dissertation";
+  actions.appendChild(heading);
+
+  const textarea = document.createElement("textarea");
+  textarea.rows = 12;
+  textarea.style.width = "100%";
+  textarea.style.boxSizing = "border-box";
+  textarea.placeholder =
+    "Introduction : accroche, définitions, problématique et annonce du plan.\n\n" +
+    "Développement : I. ... A. ... B. ... II. ... A. ... B. ...\n\n" +
+    "Conclusion : réponse à la problématique.";
+  actions.appendChild(textarea);
+
+  const rubricTitle = document.createElement("p");
+  rubricTitle.textContent =
+    "AUTOÉVALUATION SUR 20 — attribue les points selon ton travail.";
+  actions.appendChild(rubricTitle);
+
+  const criteria = [
+    ["Introduction et problématique", 4],
+    ["Organisation et plan", 4],
+    ["Raisonnement juridique", 5],
+    ["Arguments et exemples", 4],
+    ["Expression et conclusion", 3]
+  ];
+
+  const selects = [];
+
+  criteria.forEach(([label, maximum], index) => {
+    const row = document.createElement("label");
+    row.style.display = "block";
+    row.style.margin = "10px 0";
+    row.textContent = label + " (sur " + maximum + ") : ";
+
+    const select = document.createElement("select");
+    for (let n = 0; n <= maximum; n++) {
+      const option = document.createElement("option");
+      option.value = String(n);
+      option.textContent = String(n);
+      select.appendChild(option);
+    }
+
+    row.appendChild(select);
+    actions.appendChild(row);
+    selects.push(select);
+  });
+
+  const calculate = document.createElement("button");
+  calculate.className = "option";
+  calculate.textContent = "Calculer mon autoévaluation";
+  calculate.onclick = () => {
+    if (textarea.value.trim().length < 80) {
+      document.getElementById("quiz-feedback").textContent =
+        "Rédige un devoir plus complet avant de calculer ton autoévaluation.";
+      return;
+    }
+
+    const score = selects.reduce(
+      (total, select) => total + Number(select.value), 0
+    );
+
+    document.getElementById("quiz-feedback").textContent =
+      "Ton autoévaluation : " + score + " / 20.\n" +
+      (score >= 16
+        ? "Bon travail. Vérifie la précision juridique de tes arguments."
+        : score >= 12
+          ? "Résultat encourageant. Améliore les critères les moins bien notés."
+          : "Continue à travailler la problématique, le plan et le raisonnement juridique.") +
+      "\nCette note est indicative : elle ne remplace pas la correction d'un professeur.";
+  };
+  actions.appendChild(calculate);
+
+  const back = document.createElement("button");
+  back.className = "option";
+  back.textContent = "← Retour aux sujets";
+  back.onclick = openDissertations;
+  actions.appendChild(back);
+
+  document.getElementById("content-panel").scrollIntoView({behavior:"smooth"});
+}
+
 function renderDpgLessonList() {
   const body = document.getElementById("content-body");
   document.getElementById("content-title").textContent =
-    "Droit pénal général — les 10 fiches DPG";
-
+    "Droit pénal général — 10 leçons";
   body.textContent = "";
 
   const intro = document.createElement("p");
   intro.textContent =
-    "Choisis une fiche pour consulter le document original. " +
-    "Le numéro indique la page de début dans le PDF.";
+    "Choisis une leçon pour étudier son explication et son exemple directement ici.";
   body.appendChild(intro);
 
-  const lessons = [
-    {n:"01", title:"L’infraction — définition et éléments constitutifs", page:1},
-    {n:"02", title:"La responsabilité pénale du délinquant", page:2},
-    {n:"03", title:"La tentative et la complicité", page:3},
-    {n:"04", title:"La récidive et le casier judiciaire", page:5},
-    {n:"05", title:"Étude d’un cas concret", page:6},
-    {n:"06", title:"Les différents modes de preuves", page:9},
-    {n:"07", title:"Les faits justificatifs de l’infraction", page:11},
-    {n:"08", title:"Cause de non-culpabilité", page:14},
-    {n:"09", title:"Les circonstances aggravantes et atténuantes", page:16},
-    {n:"10", title:"Cas concrets", page:19}
-  ];
-
-  lessons.forEach(lesson => {
+  dpgLessons.forEach((lesson, index) => {
     const card = document.createElement("div");
     card.className = "card";
 
     const heading = document.createElement("h3");
-    heading.textContent = "DPG " + lesson.n + " — " + lesson.title;
+    heading.textContent = lesson.title;
     card.appendChild(heading);
-
-    const page = document.createElement("p");
-    page.textContent = "Page " + lesson.page + " du PDF";
-    card.appendChild(page);
 
     const button = document.createElement("button");
     button.className = "option";
-    button.textContent = "📄 Ouvrir cette fiche";
-    button.onclick = () => {
-      window.open("pdf/DPG.pdf#page=" + lesson.page, "_blank");
-    };
+    button.textContent = "📘 Étudier cette leçon";
+    button.onclick = () => openDpgLesson(index);
     card.appendChild(button);
+
     body.appendChild(card);
+  });
+}
+
+function openDpgLesson(index) {
+  const lesson = dpgLessons[index];
+  if (!lesson) return;
+
+  stopDpgLesson();
+
+  document.getElementById("content-title").textContent = lesson.title;
+
+  const body = document.getElementById("content-body");
+  body.textContent = "";
+
+  lesson.content.split("\\n\\n").forEach(block => {
+    const paragraph = document.createElement("p");
+    paragraph.textContent = block;
+    body.appendChild(paragraph);
+  });
+
+  document.getElementById("quiz-feedback").textContent = "";
+  const actions = document.getElementById("quiz-actions");
+  actions.textContent = "";
+
+  const backButton = document.createElement("button");
+  backButton.className = "option";
+  backButton.textContent = "← Retour aux 10 leçons";
+  backButton.onclick = () => {
+    renderDpgLessonList();
+    actions.textContent = "";
+  };
+  actions.appendChild(backButton);
+
+  document.getElementById("content-panel").scrollIntoView({
+    behavior: "smooth"
   });
 }
 
@@ -345,14 +849,71 @@ function startExercises() {
   document.getElementById("content-panel").hidden = false;
   stopDpgLesson();
   document.getElementById("dpg-audio-controls").hidden = true;
+  document.getElementById("quiz-feedback").textContent = "";
   document.getElementById("content-body").textContent = "";
+
+  if (currentSubject === "droit") {
+    renderDpgExerciseMenu();
+    return;
+  }
+
+  activeQuestions = quizBank[currentSubject] || [];
+  activeQuizTitle = subjectNames[currentSubject] || "Exercices";
+  renderQuestion();
+  document.getElementById("content-panel").scrollIntoView({behavior:"smooth"});
+}
+
+function renderDpgExerciseMenu() {
+  document.getElementById("content-title").textContent = "Exercices DPG — Choisis une leçon";
+  document.getElementById("content-body").textContent =
+    "Choisis la leçon étudiée pour répondre à deux questions ciblées. Tu peux aussi faire un entraînement complet.";
+  const actions = document.getElementById("quiz-actions");
+  actions.innerHTML = "";
+  document.getElementById("quiz-feedback").textContent = "";
+
+  dpgLessonTitles.forEach((title, index) => {
+    const button = document.createElement("button");
+    button.className = "option";
+    button.textContent = title;
+    button.onclick = () => beginDpgQuiz(index);
+    actions.appendChild(button);
+  });
+
+  const all = document.createElement("button");
+  all.className = "option";
+  all.textContent = "Entraînement complet — 20 questions";
+  all.onclick = () => {
+    activeQuestions = dpgLessonQuizBank.flat();
+    activeQuizTitle = "DPG — Entraînement complet";
+    beginSelectedQuiz();
+  };
+  actions.appendChild(all);
+
+  const back = document.createElement("button");
+  back.className = "option";
+  back.textContent = "← Retour à la matière";
+  back.onclick = backToSubjectMenu;
+  actions.appendChild(back);
+}
+
+function beginDpgQuiz(index) {
+  activeQuestions = dpgLessonQuizBank[index];
+  activeQuizTitle = dpgLessonTitles[index];
+  beginSelectedQuiz();
+}
+
+function beginSelectedQuiz() {
+  currentQuestion = 0;
+  currentScore = 0;
+  answered = false;
+  document.getElementById("quiz-feedback").textContent = "";
   renderQuestion();
   document.getElementById("content-panel").scrollIntoView({behavior:"smooth"});
 }
 
 function renderQuestion() {
-  const questions = quizBank[currentSubject] || [];
-  document.getElementById("content-title").textContent = "Exercices — " + subjectNames[currentSubject];
+  const questions = activeQuestions || quizBank[currentSubject] || [];
+  document.getElementById("content-title").textContent = "Exercices — " + (activeQuizTitle || subjectNames[currentSubject]);
   document.getElementById("quiz-feedback").textContent = "";
   const actions = document.getElementById("quiz-actions");
   actions.innerHTML = "";
@@ -384,7 +945,7 @@ function renderQuestion() {
 function checkAnswer(index) {
   if (answered) return;
   answered = true;
-  const item = quizBank[currentSubject][currentQuestion];
+  const item = (activeQuestions || quizBank[currentSubject])[currentQuestion];
   if (index === item.answer) currentScore++;
   document.getElementById("quiz-feedback").textContent =
     (index === item.answer ? "Bonne réponse ! " : "Réponse incorrecte. ") +
@@ -393,7 +954,7 @@ function checkAnswer(index) {
   const actions = document.getElementById("quiz-actions");
   actions.innerHTML = "";
   const next = document.createElement("button");
-  next.textContent = currentQuestion + 1 === quizBank[currentSubject].length
+  next.textContent = currentQuestion + 1 === (activeQuestions || quizBank[currentSubject]).length
     ? "Voir mon résultat" : "Question suivante";
   next.onclick = () => {
     currentQuestion++;
