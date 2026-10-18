@@ -143,8 +143,8 @@ const subjectNames = {
 
 const lessonBank = {
   malagasy: {
-    title: "Fototra amin'ny teny Malagasy",
-    content: "LESONA 1 — Ny fehezanteny\n\nNy fehezanteny dia teny maromaro milaza hevitra feno.\nOhatra: Mianatra isan'andro ny mpianatra.\n\nNy tsipelina dia manampy antsika hanoratra teny araka ny tokony ho izy.\n\nOhatra amin'ny ohabolana: Ny hazo no vanon-ko lakana, ny tany naniriany no tsara."
+    title: "Teny Malagasy — Fanomanana ACMIL",
+    content: "LESONA 1 — Ny fehezanteny\n\nNy fehezanteny dia teny na vondron-teny milaza hevitra feno.\nOhatra: Mianatra isan'andro ny mpianatra.\n\nLESONA 2 — Ny ohabolana sy ny heviny\n\nNy ohabolana dia teny fohy mirakitra fahendrena sy torohevitra.\nOhatra: Ny tody tsy misy fa ny atao no miverina.\nHeviny: Mety hisy vokany amin'ny tena ny zavatra ataontsika amin'ny hafa.\n\nLESONA 3 — Ny teny mitovy hevitra sy mifanohitra hevitra\n\nNy teny mitovy hevitra dia teny mitovitovy hevitra.\nOhatra: faly — ravo.\nNy teny mifanohitra hevitra dia teny manana hevitra mifanohitra.\nOhatra: tsara — ratsy; lehibe — kely; marina — diso; mazoto — kamo.\n\nLESONA 4 — Ny firafitry ny lahatsoratra\n\nNy lahatsoratra dia ahitana:\n1. Sava lalana: fampidirana ny lohahevitra.\n2. Votoatin-kevitra: fanazavana, antony ary ohatra.\n3. Famaranana: famintinana sy fehin-kevitra.\n\nLESONA 5 — Ny fanadihadiana lahatsoratra\n\nTadiavo ny lohahevitra, ny hevi-dehibe, ny antony, ny vokany ary ny vahaolana.\n\nLESONA 6 — Ny soatoavina malagasy\n\nAnisan'ny soatoavina malagasy ny fifanajana, ny fahamarinana, ny fifanampiana, ny firaisankina ary ny fihavanana.\n\nLESONA 7 — Ny tsipelina sy ny fanoratana\n\nTandremo ny fanoratana marina ny teny, ny mari-piatoana ary ny firindran'ny fehezanteny. Vakio indray ny lahatsoratra mba hanitsiana ny diso.\n"
   },
   francais: {
     title: "Les bases du français",
@@ -179,8 +179,16 @@ const lessonBank = {
 
 const quizBank = {
   malagasy: [
-    {q:"Inona no atao hoe fehezanteny?", options:["Teny milaza hevitra feno","Litera iray","Isa"], answer:0, why:"Ny fehezanteny dia teny milaza hevitra feno."},
-    {q:"Inona no atao hoe ohabolana?", options:["Teny vahiny","Teny mirakitra fahendrena","Anaran-toerana"], answer:1, why:"Ny ohabolana dia mirakitra fahendrena sy torohevitra."}
+    {"q": "Inona no atao hoe ohabolana?", "options": ["Teny mirakitra fahendrena sy torohevitra", "Anaran-tanàna", "Karazana isa"], "answer": 0, "why": "Ny ohabolana dia mirakitra fahendrena sy torohevitra."},
+    {"q": "Inona no hevitra azo tsoahina amin'ny hoe « Ny firaisankina no hery »?", "options": ["Tsara ny miady", "Manampy amin'ny fahombiazana ny fiaraha-miasa", "Tsy ilaina ny mifampihaino"], "answer": 1, "why": "Ny firaisankina dia manampy ny olona hiara-hiasa sy hiatrika olana."},
+    {"q": "Inona no mifanohitra amin'ny teny hoe « mazoto »?", "options": ["Mailaka", "Kamo", "Sahy"], "answer": 1, "why": "Ny teny hoe kamo dia mifanohitra amin'ny mazoto."},
+    {"q": "Inona no mitovy hevitra amin'ny hoe « faly »?", "options": ["Ravo", "Malahelo", "Tezitra"], "answer": 0, "why": "Ny hoe ravo dia teny mitovitovy hevitra amin'ny hoe faly."},
+    {"q": "Inona avy ireo fizarana telo lehibe amin'ny lahatsoratra?", "options": ["Lohateny, anarana, daty", "Sava lalana, votoatin-kevitra, famaranana", "Fanontaniana, isa, valiny"], "answer": 1, "why": "Ny lahatsoratra voalamina dia ahitana sava lalana, votoatin-kevitra ary famaranana."},
+    {"q": "Inona no tokony hotadiavina voalohany rehefa mandinika lahatsoratra?", "options": ["Ny lokon'ny taratasy", "Ny isan'ny pejy ihany", "Ny lohahevitra sy ny hevi-dehibe"], "answer": 2, "why": "Ny lohahevitra sy ny hevi-dehibe no manampy hahatakatra ny hafatra."},
+    {"q": "Inona no atao hoe famaranana amin'ny lahatsoratra?", "options": ["Famintinana sy fehin-kevitra", "Fampidirana lohahevitra vaovao tsy misy ifandraisany", "Lisitry ny teny sarotra"], "answer": 0, "why": "Ny famaranana dia mamintina ny hevitra lehibe ary manome fehin-kevitra."},
+    {"q": "Iza amin'ireto no soatoavina malagasy?", "options": ["Ny tsy fanajana", "Ny fifanajana sy ny fifanampiana", "Ny fanararaotana ny hafa"], "answer": 1, "why": "Anisan'ny soatoavina malagasy ny fifanajana sy ny fifanampiana."},
+    {"q": "Nahoana no ilaina ny mamerina mamaky lahatsoratra rehefa vita?", "options": ["Mba hanampiana diso", "Mba hanalana ny fehin-kevitra", "Mba hanitsiana tsipelina sy fandaminana"], "answer": 2, "why": "Ny famakiana indray dia manampy hanitsy ny tsipelina sy ny firafitry ny lahatsoratra."},
+    {"q": "Inona no tanjon'ny sava lalana?", "options": ["Mampiditra ny lohahevitra", "Mamintina ny lahatsoratra manontolo", "Manisa ny fehezanteny"], "answer": 0, "why": "Ny sava lalana no mampahafantatra ny lohahevitra hodinihina."}
   ],
   francais: [
     {q:"Par quoi commence généralement une phrase ?", options:["Une minuscule","Une majuscule","Une virgule"], answer:1, why:"Une phrase commence généralement par une majuscule."},
@@ -213,7 +221,17 @@ const quizBank = {
   ],
   tantara: [
     {q:"Quel outil présente les événements dans l'ordre des dates ?", options:["Une chronologie","Un dictionnaire","Une carte météo"], answer:0, why:"La chronologie ordonne les événements dans le temps."},
-    {q:"Pour étudier un événement, faut-il examiner ses causes ?", options:["Non","Oui","Seulement son nom"], answer:1, why:"Les causes aident à comprendre l'événement."}
+    {q:"Pour étudier un événement, faut-il examiner ses causes ?", options:["Non","Oui","Seulement son nom"], answer:1, why:"Les causes aident à comprendre l'événement."},
+    {q:"Quel est l'objectif politique principal du MDRM dans la lutte nationale malgache ?", options:["Obtenir l'indépendance de Madagascar","Rétablir la domination étrangère","Supprimer toutes les activités agricoles"], answer:0, why:"Le MDRM fut un mouvement politique nationaliste qui a joué un rôle important dans la revendication de l'émancipation et de l'indépendance de Madagascar."},
+    {q:"Que signifie le sigle MDRM ?", options:["Mouvement démocratique de la rénovation malgache","Mouvement démocratique de la République malgache","Mouvement pour le développement rural mondial"], answer:0, why:"MDRM signifie Mouvement démocratique de la rénovation malgache."},
+    {q:"Quel événement majeur marque l'année 1947 dans l'histoire de la décolonisation de Madagascar ?", options:["Une insurrection contre l'administration coloniale française","La proclamation de l'indépendance","La création de la Ve République malgache"], answer:0, why:"L'insurrection de 1947 constitue un épisode majeur de la lutte contre la domination coloniale. L'indépendance sera proclamée en 1960."},
+    {q:"En quelle année Madagascar a-t-il accédé à l'indépendance ?", options:["1947","1958","1960"], answer:2, why:"Madagascar est devenu indépendant le 26 juin 1960."},
+    {q:"Quelle date correspond à la proclamation de l'indépendance de Madagascar ?", options:["26 juin 1960","29 mars 1947","14 octobre 1958"], answer:0, why:"L'indépendance de Madagascar a été proclamée le 26 juin 1960."},
+    {q:"Que désigne la décolonisation ?", options:["Le processus par lequel un territoire met fin à la domination coloniale","L'extension d'un empire colonial","La création d'une nouvelle colonie"], answer:0, why:"La décolonisation est le processus politique par lequel un territoire colonisé accède à l'autonomie ou à l'indépendance."},
+    {q:"Quel facteur interne a contribué à la décolonisation de Madagascar ?", options:["Le développement du nationalisme malgache","La disparition de toute revendication politique","L'abandon de toute idée d'indépendance"], answer:0, why:"L'émergence d'élites et de mouvements nationalistes a renforcé les revendications d'émancipation."},
+    {q:"Quel est l'intérêt d'étudier les étapes de la marche vers l'indépendance ?", options:["Comprendre le processus politique ayant conduit à l'indépendance","Remplacer les dates par des opinions","Éviter d'analyser les causes historiques"], answer:0, why:"L'étude des étapes permet de relier les événements, les acteurs, les causes et les conséquences historiques."},
+    {q:"Dans une analyse de document historique, que faut-il faire en premier ?", options:["Identifier le sujet, la nature, l'auteur et le contexte du document","Inventer des informations absentes du document","Donner seulement son opinion personnelle"], answer:0, why:"Une bonne analyse identifie le document et son contexte avant d'expliquer les idées principales en s'appuyant sur des éléments précis."},
+    {q:"Quelle méthode convient pour expliquer les causes de la décolonisation ?", options:["Présenter plusieurs facteurs et les relier aux événements historiques","Énumérer des dates sans explication","Donner uniquement une conclusion sans argument"], answer:0, why:"Une réponse structurée expose les facteurs politiques et sociaux, les mouvements nationalistes et le contexte historique, puis explique leurs liens."}
   ],
   logique: [
     {q:"Combien font 12 + 8 ?", options:["18","20","22"], answer:1, why:"12 + 8 = 20."},
