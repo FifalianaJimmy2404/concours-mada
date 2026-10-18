@@ -1117,6 +1117,63 @@ function renderMathCorrections() {
   document.getElementById("content-panel").scrollIntoView({behavior: "smooth"});
 }
 
+
+function renderFrenchCorrections() {
+  const title = document.getElementById("content-title");
+  const body = document.getElementById("content-body");
+  const actions = document.getElementById("quiz-actions");
+
+  title.textContent = "Français — Exercices corrigés";
+  actions.innerHTML = "";
+
+  const corrections = [
+    ["L’adjectif qualificatif", "Dans « Le candidat sérieux travaille », quel est l’adjectif ?", "Sérieux.", "Un adjectif précise un nom. « Sérieux » donne une qualité du nom « candidat »."],
+    ["Le futur simple", "Conjuguez « protéger » avec « nous » au futur simple.", "Nous protégerons.", "Pour un verbe en -er, on utilise l’infinitif et la terminaison -ons."],
+    ["L’accord du participe passé", "Complétez : « Elles sont ... » avec le verbe arriver.", "Elles sont arrivées.", "Avec l’auxiliaire être, le participe passé s’accorde avec le sujet. « Elles » est féminin pluriel."],
+    ["L’antonyme", "Quel est le contraire de « généreux » ?", "Avare.", "Un antonyme est un mot de sens contraire."],
+    ["La conséquence", "Citez un connecteur de conséquence.", "Par conséquent.", "Exemple : « Il a révisé ; par conséquent, il a réussi. » Le connecteur annonce le résultat."],
+    ["« A » ou « à »", "Dans « Il a un dossier », pourquoi écrit-on « a » sans accent ?", "C’est le verbe avoir.", "Remplacez par « avait » : « Il avait un dossier. » La phrase reste correcte."],
+    ["La phrase complexe", "Dans « Le candidat écrit et son collègue relit », combien y a-t-il de propositions ?", "Deux propositions.", "Les verbes conjugués sont « écrit » et « relit ». Chaque proposition possède son sujet."],
+    ["L’introduction", "Quel élément central guide une dissertation ?", "La problématique.", "Elle formule la question à laquelle le développement devra répondre."],
+    ["L’opposition", "Citez un connecteur d’opposition.", "Cependant.", "Exemple : « Il a beaucoup travaillé ; cependant, le résultat est insuffisant. »"],
+    ["La conclusion", "Quel est le rôle de la conclusion d’une dissertation ?", "Répondre à la problématique et faire le bilan.", "Elle rappelle l’essentiel du raisonnement et donne une réponse claire à la question posée."]
+  ];
+
+  body.innerHTML = "";
+  const intro = document.createElement("p");
+  intro.textContent = "Révise chaque notion : lis la question, cherche la réponse, puis étudie l’explication.";
+  body.appendChild(intro);
+
+  corrections.forEach((item, i) => {
+    const card = document.createElement("section");
+    card.style.cssText = "border:1px solid #dbe4f0;border-radius:12px;padding:14px;margin:12px 0;background:#fff;color:#17243a";
+
+    const heading = document.createElement("h3");
+    heading.textContent = (i + 1) + ". " + item[0];
+    card.appendChild(heading);
+
+    [["Question", item[1]], ["Réponse", item[2]], ["Correction expliquée", item[3]]].forEach(pair => {
+      const para = document.createElement("p");
+      const strong = document.createElement("strong");
+      strong.textContent = pair[0] + " : ";
+      para.appendChild(strong);
+      para.appendChild(document.createTextNode(pair[1]));
+      card.appendChild(para);
+    });
+
+    body.appendChild(card);
+  });
+
+  const back = document.createElement("button");
+  back.className = "option";
+  back.textContent = "← Retour à la matière";
+  back.onclick = backToSubjectMenu;
+  actions.appendChild(back);
+
+  document.getElementById("content-panel").scrollIntoView({behavior:"smooth"});
+}
+
+
 function startExercises() {
   currentQuestion = 0;
   currentScore = 0;
@@ -1130,6 +1187,11 @@ function startExercises() {
 
   if (currentSubject === "droit") {
     renderDpgExerciseMenu();
+    return;
+  }
+
+  if (currentSubject === "francais") {
+    renderFrenchCorrections();
     return;
   }
 
