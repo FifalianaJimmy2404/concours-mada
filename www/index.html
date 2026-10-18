@@ -1598,10 +1598,138 @@ function startExercises() {
     return;
   }
 
+  if (currentSubject === "scienceeco") {
+    renderScienceEcoExercises();
+    return;
+  }
+
   activeQuestions = quizBank[currentSubject] || [];
   activeQuizTitle = subjectNames[currentSubject] || "Exercices";
   renderQuestion();
   document.getElementById("content-panel").scrollIntoView({behavior:"smooth"});
+}
+
+
+function renderScienceEcoExercises() {
+  const title = document.getElementById("content-title");
+  const body = document.getElementById("content-body");
+  const actions = document.getElementById("quiz-actions");
+  const feedback = document.getElementById("quiz-feedback");
+
+  title.textContent = "Science économique — Exercices écrits corrigés";
+  body.textContent = "";
+  actions.innerHTML = "";
+  feedback.textContent = "";
+
+  const intro = document.createElement("p");
+  intro.className = "lesson-method";
+  intro.textContent =
+    "Rédige tes réponses dans les zones prévues, puis affiche la correction. Pas de quiz, pas de QCM et pas de score.";
+  body.appendChild(intro);
+
+  const exercises = [
+    {
+      title: "Exercice 1 — Questions de cours",
+      prompt:
+        "1. Définis la science économique.\n" +
+        "2. Explique la différence entre un besoin, un bien et un service.\n" +
+        "3. Distingue la croissance économique du développement économique.",
+      correction:
+        "1. La science économique étudie la manière dont les personnes et la société utilisent des ressources limitées pour satisfaire leurs besoins.\n\n" +
+        "2. Un besoin est un manque ressenti. Un bien est un produit matériel qui peut satisfaire un besoin. Un service est une prestation, par exemple le transport ou une consultation médicale.\n\n" +
+        "3. La croissance économique désigne l'augmentation de la production de biens et de services. Le développement économique est plus large : il concerne aussi l'amélioration des conditions de vie, de la santé, de l'éducation et des possibilités offertes à la population."
+    },
+    {
+      title: "Exercice 2 — Calcul d'une hausse de prix",
+      prompt:
+        "Le prix d'un sac de riz passe de 100 000 Ar à 115 000 Ar.\n\n" +
+        "1. Calcule l'augmentation en ariary.\n" +
+        "2. Calcule le taux d'augmentation en pourcentage.\n" +
+        "Présente les étapes de ton calcul.",
+      correction:
+        "1. Augmentation : 115 000 − 100 000 = 15 000 Ar.\n\n" +
+        "2. Taux d'augmentation = (augmentation ÷ prix initial) × 100.\n" +
+        "(15 000 ÷ 100 000) × 100 = 15 %.\n\n" +
+        "Conclusion : le prix du sac de riz a augmenté de 15 %. Cet exemple est fictif et sert uniquement à apprendre le calcul."
+    },
+    {
+      title: "Exercice 3 — Étude de cas à Madagascar",
+      prompt:
+        "Dans une commune rurale, une mauvaise récolte réduit la quantité de riz disponible sur le marché. La demande des ménages reste importante.\n\n" +
+        "1. Quel effet cette situation peut-elle avoir sur le prix du riz ?\n" +
+        "2. Donne deux conséquences possibles pour les ménages.\n" +
+        "3. Propose deux mesures pour améliorer la situation à moyen terme.",
+      correction:
+        "1. Si l'offre diminue alors que la demande reste importante, le prix peut augmenter. L'évolution réelle dépend aussi des stocks, des importations, du transport et des conditions du marché.\n\n" +
+        "2. Les ménages peuvent consacrer une plus grande part de leur budget à l'alimentation et réduire certaines autres dépenses essentielles.\n\n" +
+        "3. Parmi les mesures possibles : améliorer l'irrigation et le stockage, soutenir les techniques agricoles adaptées, faciliter l'accès aux marchés et réduire les pertes après récolte."
+    },
+    {
+      title: "Exercice 4 — Dissertation économique",
+      prompt:
+        "Sujet : « Le développement de l'agriculture peut-il contribuer à réduire la pauvreté à Madagascar ? »\n\n" +
+        "Rédige une introduction, propose un plan en deux ou trois parties et écris une conclusion. Appuie tes arguments sur des exemples pertinents.",
+      correction:
+        "Problématique possible : dans quelles conditions l'amélioration de l'agriculture peut-elle augmenter les revenus et améliorer les conditions de vie ?\n\n" +
+        "I. L'agriculture peut créer des revenus et des emplois, améliorer la disponibilité alimentaire et soutenir les activités de transformation et de commerce.\n\n" +
+        "II. Ses effets peuvent être limités par les aléas climatiques, le manque d'infrastructures, les difficultés de financement, les pertes après récolte et l'accès insuffisant aux marchés.\n\n" +
+        "III. Le développement agricole demande des investissements adaptés : irrigation, routes rurales, stockage, formation et accès aux marchés.\n\n" +
+        "Conclusion possible : l'agriculture peut contribuer à réduire la pauvreté si l'augmentation de la production s'accompagne de meilleurs revenus, d'infrastructures adaptées et d'un accès aux débouchés."
+    }
+  ];
+
+  exercises.forEach((exercise) => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const heading = document.createElement("h3");
+    heading.textContent = exercise.title;
+    card.appendChild(heading);
+
+    const prompt = document.createElement("p");
+    prompt.className = "lesson-definition";
+    prompt.textContent = exercise.prompt;
+    card.appendChild(prompt);
+
+    const answer = document.createElement("textarea");
+    answer.rows = 5;
+    answer.placeholder = "Rédige ta réponse ici...";
+    answer.setAttribute("aria-label", "Réponse à " + exercise.title);
+    answer.style.width = "100%";
+    answer.style.boxSizing = "border-box";
+    card.appendChild(answer);
+
+    const correction = document.createElement("p");
+    correction.className = "lesson-example";
+    correction.textContent = "Correction proposée\n\n" + exercise.correction;
+    correction.hidden = true;
+    card.appendChild(correction);
+
+    const button = document.createElement("button");
+    button.className = "option";
+    button.textContent = "Afficher la correction";
+    button.setAttribute("aria-expanded", "false");
+    button.onclick = () => {
+      correction.hidden = !correction.hidden;
+      button.textContent = correction.hidden
+        ? "Afficher la correction"
+        : "Masquer la correction";
+      button.setAttribute("aria-expanded", String(!correction.hidden));
+    };
+    card.appendChild(button);
+
+    body.appendChild(card);
+  });
+
+  const back = document.createElement("button");
+  back.className = "option";
+  back.textContent = "← Retour à la matière";
+  back.onclick = backToSubjectMenu;
+  actions.appendChild(back);
+
+  document.getElementById("content-panel").scrollIntoView({
+    behavior: "smooth"
+  });
 }
 
 function renderDpgExerciseMenu() {
