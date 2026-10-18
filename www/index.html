@@ -69,6 +69,16 @@ small{color:#617087}
 <section id="content-panel" class="card" hidden>
   <h2 id="content-title"></h2>
   <div id="content-body" class="lesson-text"></div>
+  <div id="dpg-audio-controls" class="card" hidden>
+    <p><strong>Version audio — Droit pénal général</strong></p>
+    <audio id="dpg-audio-player" controls preload="metadata"
+           style="width:100%">
+      <source src="audio/Comment_la_justice_définit_un_crime.m4a"
+              type="audio/mp4">
+      Ton navigateur ne peut pas lire ce fichier audio.
+    </audio>
+    <p>Utilise les commandes du lecteur pour écouter ou mettre en pause.</p>
+  </div>
   <div id="quiz-feedback" class="lesson-text"></div>
   <div id="quiz-actions"></div>
   <button class="option" onclick="backToSubjectMenu()">← Retour à la matière</button>
@@ -210,12 +220,62 @@ function openDpgPdf() {
   window.open("pdf/DPG.pdf", "_blank");
 }
 
+function speakDpgLesson() {
+  const status = document.getElementById("dpg-audio-status");
+  if (!("speechSynthesis" in window) ||
+      typeof SpeechSynthesisUtterance === "undefined") {
+    status.textContent = "Lecture vocale indisponible. Vérifie le moteur vocal dans les paramètres Android.";
+    return;
+  }
+  const text = document.getElementById("content-title").innerText + ". " +
+               document.getElementById("content-body").innerText;
+  if (!text.trim()) {
+    status.textContent = "Aucun texte à lire.";
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "fr-FR";
+  utterance.rate = 0.85;
+  utterance.onstart = () => { status.textContent = "Lecture en cours…"; };
+  utterance.onend = () => { status.textContent = "Lecture terminée."; };
+  utterance.onerror = () => {
+    status.textContent = "Échec de lecture. Vérifie la voix française sur Android.";
+  };
+  window.speechSynthesis.speak(utterance);
+}
+
+function pauseDpgLesson() {
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.pause();
+    document.getElementById("dpg-audio-status").textContent = "Lecture en pause.";
+  }
+}
+
+function resumeDpgLesson() {
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.resume();
+    document.getElementById("dpg-audio-status").textContent = "Reprise de la lecture.";
+  }
+}
+
+function stopDpgLesson() {
+  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  const player = document.getElementById("dpg-audio-player");
+  if (player) {
+    player.pause();
+    player.currentTime = 0;
+  }
+}
+
 function showLesson() {
   const lesson = lessonBank[currentSubject];
+  stopDpgLesson();
   document.getElementById("subject-menu").hidden = true;
   document.getElementById("content-panel").hidden = false;
   document.getElementById("content-title").textContent = lesson.title;
   document.getElementById("content-body").textContent = lesson.content;
+  document.getElementById("dpg-audio-controls").hidden = currentSubject !== "droit";
   document.getElementById("quiz-feedback").textContent = "";
   document.getElementById("quiz-actions").innerHTML = "";
   document.getElementById("content-panel").scrollIntoView({behavior:"smooth"});
@@ -227,6 +287,8 @@ function startExercises() {
   answered = false;
   document.getElementById("subject-menu").hidden = true;
   document.getElementById("content-panel").hidden = false;
+  stopDpgLesson();
+  document.getElementById("dpg-audio-controls").hidden = true;
   document.getElementById("content-body").textContent = "";
   renderQuestion();
   document.getElementById("content-panel").scrollIntoView({behavior:"smooth"});
@@ -285,11 +347,13 @@ function checkAnswer(index) {
 }
 
 function backToSubjectMenu() {
+  stopDpgLesson();
   document.getElementById("content-panel").hidden = true;
   document.getElementById("subject-menu").hidden = false;
 }
 
 function backToSubjects() {
+  stopDpgLesson();
   document.getElementById("subject-menu").hidden = true;
   document.getElementById("content-panel").hidden = true;
   document.getElementById("subjects").hidden = false;
