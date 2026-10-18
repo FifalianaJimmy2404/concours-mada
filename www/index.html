@@ -25,6 +25,169 @@ small{color:#617087}
 #subject-menu button, #content-panel button {margin-top:10px}
 .lesson-text {white-space:pre-line;line-height:1.7}
 
+
+/* DESIGN COULEURS CONCOURS MADA */
+:root {
+  --bleu: #123b70;
+  --bleu-vif: #164e91;
+  --fond: #f1f5fb;
+  --texte: #17243a;
+  --secondaire: #617087;
+  --vert: #e3f7eb;
+  --orange: #fff1d8;
+  --violet: #f0eaff;
+  --bordure: #dce5f1;
+}
+body {
+  background: var(--fond);
+  color: var(--texte);
+  font-size: 16px;
+  line-height: 1.65;
+}
+header {
+  background: linear-gradient(135deg, #123b70, #2476bd);
+  padding: 28px 20px;
+  box-shadow: 0 5px 18px #123b7020;
+}
+header h1 {
+  font-size: 29px;
+  letter-spacing: .3px;
+}
+header p { color: #edf5ff; }
+main { padding: 16px; }
+.card {
+  background: #fff;
+  border: 1px solid var(--bordure);
+  border-radius: 18px;
+  padding: 18px;
+  margin: 16px 0;
+  box-shadow: 0 5px 18px #1b35500d;
+}
+h2 {
+  color: var(--bleu);
+  line-height: 1.35;
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+button {
+  background: linear-gradient(135deg, #164e91, #2476bd);
+  color: #fff;
+  border-radius: 12px;
+  padding: 14px 15px;
+  min-height: 48px;
+  font-weight: 600;
+  line-height: 1.4;
+  box-shadow: 0 3px 8px #164e9118;
+  transition: opacity .2s ease;
+}
+button:active { opacity: .78; }
+button.option {
+  background: #e8f0fb;
+  color: #123b70;
+  border: 1px solid #cbdcf2;
+  box-shadow: none;
+}
+.contest-btn {
+  background: #fff;
+  color: var(--texte);
+  border: 1px solid var(--bordure);
+  box-shadow: 0 3px 12px #123b7010;
+}
+.contest-btn span { padding: 15px; }
+.lesson-text {
+  white-space: pre-line;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+  font-size: 16px;
+}
+#content-title {
+  padding-bottom: 12px;
+  border-bottom: 3px solid #dceaff;
+}
+#content-body {
+  color: #26364d;
+  line-height: 1.95;
+  letter-spacing: .1px;
+  padding: 4px 1px 12px;
+}
+#quiz-feedback {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #eef5ff;
+}
+#quiz-actions { margin-top: 12px; }
+#dpg-audio-controls {
+  background: #eef5ff;
+  border: 1px solid #cbdcf2;
+  padding: 14px;
+  margin-top: 18px;
+}
+audio { max-width: 100%; }
+small { color: var(--secondaire); }
+button:focus-visible {
+  outline: 3px solid #f3b544;
+  outline-offset: 3px;
+}
+@media (max-width: 380px) {
+  main { padding: 11px; }
+  .card { padding: 14px; }
+  header h1 { font-size: 25px; }
+  #content-body { font-size: 15px; }
+}
+/* FIN DESIGN COULEURS CONCOURS MADA */
+
+
+/* COULEURS DES TEXTES DE LEÇONS */
+#content-body p {
+  padding: 13px 15px;
+  margin: 12px 0;
+  border-left: 5px solid #b8c9df;
+  border-radius: 8px;
+  background: #f5f8fc;
+  color: #26364d;
+  line-height: 1.95;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+#content-body p.lesson-definition {
+  background: #e8f2ff;
+  border-left-color: #2373d1;
+  color: #123b70;
+}
+#content-body p.lesson-example {
+  background: #e7f7ed;
+  border-left-color: #219653;
+  color: #185c36;
+}
+#content-body p.lesson-retain {
+  background: #f0eaff;
+  border-left-color: #805ad5;
+  color: #51369a;
+  font-weight: 600;
+}
+#content-body p.lesson-warning {
+  background: #fff1dc;
+  border-left-color: #e58b18;
+  color: #814600;
+}
+#content-body p.lesson-method {
+  background: #e4f8f7;
+  border-left-color: #159b98;
+  color: #145b5a;
+}
+#content-body p.lesson-heading {
+  background: #eaf0fa;
+  border-left-color: #123b70;
+  color: #123b70;
+  font-weight: 700;
+}
+#content-body p.lesson-keywords {
+  background: #fff0f0;
+  border-left-color: #d64545;
+  color: #8f2424;
+}
+
 </style>
 </head>
 <body>
@@ -569,7 +732,7 @@ function showLesson() {
   } else {
     const lesson = lessonBank[currentSubject];
     document.getElementById("content-title").textContent = lesson.title;
-    document.getElementById("content-body").textContent = lesson.content;
+    renderColoredLessonContent(document.getElementById("content-body"), lesson.content);
     document.getElementById("dpg-audio-controls").hidden = true;
   }
 
@@ -621,6 +784,46 @@ function renderFrenchLessonList() {
   document.getElementById("quiz-actions").textContent = "";
 }
 
+
+function renderColoredLessonContent(container, content) {
+  container.textContent = "";
+
+  const blocks = String(content || "")
+    .trim()
+    .split(/\n\s*\n/)
+    .filter(block => block.trim());
+
+  blocks.forEach(block => {
+    const paragraph = document.createElement("p");
+    paragraph.textContent = block.trim();
+
+    const firstLine = block.trim().split("\n")[0].trim();
+    const heading = firstLine
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toUpperCase();
+
+    if (/^(DEFINITION|DEFINITIONS|NOTIONS ESSENTIELLES)\b/.test(heading)) {
+      paragraph.className = "lesson-definition";
+    } else if (/^(EXEMPLE|EXEMPLES|APPLICATION)\b/.test(heading)) {
+      paragraph.className = "lesson-example";
+    } else if (/^(A RETENIR|A MEMORISER|ESSENTIEL A RETENIR)\b/.test(heading)) {
+      paragraph.className = "lesson-retain";
+    } else if (/^(ATTENTION|ERREURS A EVITER|PIEGE|PIEGES|CONSEIL|CONSEILS)\b/.test(heading)) {
+      paragraph.className = "lesson-warning";
+    } else if (/^(METHODE|METHODOLOGIE|ETAPES|PLAN DE REPONSE)\b/.test(heading)) {
+      paragraph.className = "lesson-method";
+    } else if (/^[A-ZÀ-ÖØ-Þ0-9 •\-’'()]{3,70}$/.test(firstLine)
+               && firstLine.length < block.trim().length) {
+      paragraph.className = "lesson-heading";
+    } else if (/\b(IMPUTABILITE|CULPABILITE|RESPONSABILITE PENALE|ELEMENT LEGAL|ELEMENT MATERIEL|ELEMENT MORAL)\b/.test(heading)) {
+      paragraph.className = "lesson-keywords";
+    }
+
+    container.appendChild(paragraph);
+  });
+}
+
 function openFrenchLesson(index) {
   const lesson = getFrenchLessons()[index];
   if (!lesson) return;
@@ -629,11 +832,7 @@ function openFrenchLesson(index) {
   document.getElementById("content-title").textContent = lesson.title;
   body.textContent = "";
 
-  lesson.content.split("\n\n").forEach(block => {
-    const paragraph = document.createElement("p");
-    paragraph.textContent = block;
-    body.appendChild(paragraph);
-  });
+  renderColoredLessonContent(body, lesson.content);
 
   const actions = document.getElementById("quiz-actions");
   actions.textContent = "";
@@ -1029,11 +1228,7 @@ function openDpgLesson(index) {
   const body = document.getElementById("content-body");
   body.textContent = "";
 
-  lesson.content.split("\\n\\n").forEach(block => {
-    const paragraph = document.createElement("p");
-    paragraph.textContent = block;
-    body.appendChild(paragraph);
-  });
+  renderColoredLessonContent(body, lesson.content);
 
   document.getElementById("quiz-feedback").textContent = "";
   const actions = document.getElementById("quiz-actions");
