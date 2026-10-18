@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#123b70">
+<title>Concours Mada</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f2f5fa;color:#17243a}
+header{background:#123b70;color:white;padding:26px 18px;border-radius:0 0 22px 22px}
+header h1{margin:0 0 8px}
+main{padding:18px;max-width:650px;margin:auto}
+.card{background:white;padding:18px;border-radius:15px;margin:14px 0;box-shadow:0 3px 12px #0000000d}
+button{background:#164e91;color:white;border:0;border-radius:10px;padding:13px;width:100%;font-size:16px;margin-top:9px}
+.option{background:#edf3fb;color:#17243a;text-align:left}
+button:disabled{opacity:.6}
+small{color:#617087}
+
+.contest-btn{padding:0;overflow:hidden;text-align:left;background:#fff;color:#17243a;border:1px solid #dbe4f0}
+.contest-btn img{display:block;width:100%;height:145px;object-fit:cover}
+.contest-btn span{display:block;padding:13px;font-weight:bold}
+
+
+#subject-menu button, #content-panel button {margin-top:10px}
+.lesson-text {white-space:pre-line;line-height:1.7}
+
+</style>
+</head>
+<body>
+<header>
+<h1>Concours Mada</h1>
+<p>Prépare ton concours, progresse chaque jour.</p>
+<small style="color:#e4edff">Première version — utilisable hors ligne</small>
+</header>
+<main>
+<section id="contest-choice" class="card">
+<h2>Choisis ton concours</h2>
+<p>Tu prépareras un seul concours à la fois.</p>
+<button class="contest-btn" onclick="chooseContest('acmil')"><img src="images/acmil.svg" alt="ACMIL"><span>ACMIL</span></button>
+<button class="contest-btn" onclick="chooseContest('gendarmes')"><img src="images/gendarmes.svg" alt="Gendarmerie nationale"><span>Gendarmerie nationale</span></button>
+<button class="contest-btn" onclick="chooseContest('agentPolice')"><img src="images/agent-police.svg" alt="Illustration agent de police"><span>Agent de police</span></button>
+<button class="contest-btn" onclick="chooseContest('officierPolice')"><img src="images/officier-police.svg" alt="Illustration officier de police"><span>Officier de police</span></button>
+<button class="contest-btn" onclick="chooseContest('commissairePolice')"><img src="images/commissaire-police.svg" alt="Illustration commissaire de police"><span>Commissaire de police</span></button>
+<button class="contest-btn" onclick="chooseContest('administratif')"><img src="images/administratif.svg" alt="Concours administratifs"><span>Concours administratifs</span></button>
+<button class="contest-btn" onclick="chooseContest('autres')"><img src="images/autres.svg" alt="Autres concours"><span>Autres concours</span></button>
+</section>
+<section id="subjects" class="card" hidden>
+<h2 id="subjects-title">Choisis une matière</h2>
+<button data-subject="culture" onclick="start('culture')">Culture générale</button>
+<button data-subject="francais" onclick="start('francais')">Français</button>
+<button data-subject="logique" onclick="start('logique')">Mathématiques</button>
+<button data-subject="droit" onclick="start('droit')">DPG — Droit pénal général</button>
+<button data-subject="malagasy" onclick="start('malagasy')">Malagasy</button>
+<button data-subject="ohabolana" onclick="start('ohabolana')">Ohabolana sy fomba fiteny</button>
+<button data-subject="tantara" onclick="start('tantara')">Histoire</button>
+</section>
+
+
+<section id="subject-menu" class="card" hidden>
+  <h2 id="subject-menu-title">Matière</h2>
+  <p>Choisis ce que tu veux travailler.</p>
+  <button onclick="showLesson()">📘 Leçons</button>
+  <button onclick="startExercises()">✍️ Exercices</button>
+  <button id="dpg-pdf-button" onclick="openDpgPdf()" hidden>📄 Consulter la fiche PDF DPG</button>
+  <button class="option" onclick="backToSubjects()">← Retour aux matières</button>
+</section>
+
+<section id="content-panel" class="card" hidden>
+  <h2 id="content-title"></h2>
+  <div id="content-body" class="lesson-text"></div>
+  <div id="quiz-feedback" class="lesson-text"></div>
+  <div id="quiz-actions"></div>
+  <button class="option" onclick="backToSubjectMenu()">← Retour à la matière</button>
+</section>
+
+</main>
+<script>
+const contestNames = {
+  acmil: "ACMIL",
+  gendarmes: "Gendarmerie nationale",
+  agentPolice: "Agent de police",
+  officierPolice: "Officier de police",
+  commissairePolice: "Commissaire de police",
+  administratif: "Concours administratifs",
+  autres: "Autres concours"
+};
+
+let selectedContest = "";
+
+function chooseContest(code) {
+  if (selectedContest) return;
+  if (!contestNames[code]) return;
+
+  selectedContest = code;
+
+  const subjectsByContest = {
+    acmil: ["malagasy", "francais", "droit", "tantara", "logique", "culture"],
+    gendarmes: ["culture", "francais", "logique", "malagasy", "tantara"],
+    agentPolice: ["culture", "francais", "malagasy", "tantara"],
+    officierPolice: ["culture", "francais", "malagasy", "tantara", "droit", "logique"],
+    commissairePolice: ["culture", "francais", "malagasy", "tantara", "droit", "logique"],
+    administratif: ["culture", "francais", "logique", "droit"],
+    autres: ["culture", "francais", "logique", "droit", "malagasy", "ohabolana", "tantara"]
+  };
+
+  document.getElementById("contest-choice").hidden = true;
+
+  document.querySelectorAll("#subjects button[data-subject]").forEach(button => {
+    button.hidden = !subjectsByContest[code].includes(button.dataset.subject);
+  });
+
+  document.getElementById("subjects-title").textContent =
+    "Matières — " + contestNames[code];
+  document.getElementById("subjects").hidden = false;
+  document.getElementById("subjects").scrollIntoView({behavior: "smooth"});
+}
+
+
+
+const subjectNames = {
+  malagasy: "Malagasy",
+  francais: "Français",
+  droit: "DPG — Droit pénal général",
+  tantara: "Histoire",
+  logique: "Mathématiques",
+  culture: "Culture générale",
+  ohabolana: "Ohabolana sy fomba fiteny"
+};
+
+const lessonBank = {
+  malagasy: {
+    title: "Fototra amin'ny teny Malagasy",
+    content: "LESONA 1 — Ny fehezanteny\n\nNy fehezanteny dia teny maromaro milaza hevitra feno.\nOhatra: Mianatra isan'andro ny mpianatra.\n\nNy tsipelina dia manampy antsika hanoratra teny araka ny tokony ho izy.\n\nOhatra amin'ny ohabolana: Ny hazo no vanon-ko lakana, ny tany naniriany no tsara."
+  },
+  francais: {
+    title: "Les bases du français",
+    content: "LEÇON 1 — La phrase\n\nUne phrase commence généralement par une majuscule et se termine par un signe de ponctuation.\nExemple : L'élève prépare son concours.\n\nLe sujet indique de qui ou de quoi l'on parle. Le verbe exprime une action ou un état.\nExemple : Les candidats révisent. Sujet : les candidats. Verbe : révisent."
+  },
+  droit: {
+    title: "Introduction au droit pénal général",
+    content: "LEÇON 1 — L'infraction pénale\n\nL'infraction est un comportement interdit par la loi pénale et passible d'une peine.\n\nOn étudie généralement trois éléments :\n1. L'élément légal : le texte qui prévoit l'infraction.\n2. L'élément matériel : le comportement réalisé.\n3. L'élément moral : l'état d'esprit exigé par la loi.\n\nAttention : vérifie toujours les textes malgaches applicables avant de citer un article."
+  },
+  tantara: {
+    title: "Méthode pour étudier l'histoire",
+    content: "LEÇON 1 — Les repères historiques\n\nPour étudier un événement, retiens : la date, le lieu, les acteurs, les causes et les conséquences.\n\nConstruis une chronologie dans l'ordre des dates. Distingue les faits établis des interprétations."
+  },
+  logique: {
+    title: "Mathématiques — Calcul de base",
+    content: "LEÇON 1 — Les opérations\n\nAddition : 12 + 8 = 20.\nSoustraction : 20 − 8 = 12.\nMultiplication : 4 × 5 = 20.\nDivision : 20 ÷ 4 = 5.\n\nPour un problème, lis l'énoncé, identifie les données, choisis l'opération puis vérifie le résultat."
+  },
+  culture: {
+    title: "Culture générale — Méthode",
+    content: "LEÇON 1 — Comprendre une question\n\nLis attentivement la question et repère le sujet principal.\n\nPour mémoriser une information, retiens le nom, la date, le lieu et son importance. Vérifie les faits auprès de sources fiables."
+  },
+  ohabolana: {
+    title: "Ohabolana sy fomba fiteny",
+    content: "LESONA 1 — Ny ohabolana\n\nNy ohabolana dia teny fohy mirakitra fahendrena sy torohevitra.\n\nOhatra: « Ny tody tsy misy fa ny atao no miverina. »\n\nAmpiasaina ny ohabolana mba hanazavana hevitra na hanomezana torohevitra. Diniho ny heviny arakaraka ny toe-javatra."
+  }
+};
+
+const quizBank = {
+  malagasy: [
+    {q:"Inona no atao hoe fehezanteny?", options:["Teny milaza hevitra feno","Litera iray","Isa"], answer:0, why:"Ny fehezanteny dia teny milaza hevitra feno."},
+    {q:"Inona no atao hoe ohabolana?", options:["Teny vahiny","Teny mirakitra fahendrena","Anaran-toerana"], answer:1, why:"Ny ohabolana dia mirakitra fahendrena sy torohevitra."}
+  ],
+  francais: [
+    {q:"Par quoi commence généralement une phrase ?", options:["Une minuscule","Une majuscule","Une virgule"], answer:1, why:"Une phrase commence généralement par une majuscule."},
+    {q:"Dans « Les candidats révisent », quel est le verbe ?", options:["Les","candidats","révisent"], answer:2, why:"« Révisent » est le verbe."}
+  ],
+  droit: [
+    {q:"Quel élément correspond au texte qui prévoit l'infraction ?", options:["Légal","Matériel","Moral"], answer:0, why:"L'élément légal renvoie au texte pénal applicable."},
+    {q:"Quel élément concerne le comportement réalisé ?", options:["Moral","Matériel","Légal"], answer:1, why:"L'élément matériel concerne le comportement."}
+  ],
+  tantara: [
+    {q:"Quel outil présente les événements dans l'ordre des dates ?", options:["Une chronologie","Un dictionnaire","Une carte météo"], answer:0, why:"La chronologie ordonne les événements dans le temps."},
+    {q:"Pour étudier un événement, faut-il examiner ses causes ?", options:["Non","Oui","Seulement son nom"], answer:1, why:"Les causes aident à comprendre l'événement."}
+  ],
+  logique: [
+    {q:"Combien font 12 + 8 ?", options:["18","20","22"], answer:1, why:"12 + 8 = 20."},
+    {q:"Combien font 20 ÷ 4 ?", options:["4","5","6"], answer:1, why:"20 divisé par 4 égale 5."}
+  ],
+  culture: [
+    {q:"Que faut-il faire avant de citer un fait ?", options:["Le vérifier","L'inventer","L'ignorer"], answer:0, why:"Il faut vérifier les informations auprès de sources fiables."},
+    {q:"Quel repère aide à situer un événement dans le temps ?", options:["Une date","Une couleur","Un adjectif"], answer:0, why:"La date situe l'événement dans le temps."}
+  ],
+  ohabolana: [
+    {q:"Inona no raketin'ny ohabolana ?", options:["Fahendrena","Kajy ihany","Anaran'olona foana"], answer:0, why:"Matetika ny ohabolana dia mirakitra fahendrena sy torohevitra."},
+    {q:"Rahoviana no tokony handinihana ny hevitry ny ohabolana ?", options:["Araka ny toe-javatra","Tsy ilaina mihitsy","Amin'ny isa ihany"], answer:0, why:"Diniho araka ny toe-javatra ampiasana azy."}
+  ]
+};
+
+let currentSubject = "";
+let currentQuestion = 0;
+let currentScore = 0;
+let answered = false;
+
+function start(subject) {
+  if (!subjectNames[subject]) return;
+  currentSubject = subject;
+  document.getElementById("subjects").hidden = true;
+  document.getElementById("content-panel").hidden = true;
+  document.getElementById("subject-menu-title").textContent = subjectNames[subject];
+  document.getElementById("dpg-pdf-button").hidden = subject !== "droit";
+  document.getElementById("subject-menu").hidden = false;
+  document.getElementById("subject-menu").scrollIntoView({behavior:"smooth"});
+}
+
+function openDpgPdf() {
+  window.open("pdf/DPG.pdf", "_blank");
+}
+
+function showLesson() {
+  const lesson = lessonBank[currentSubject];
+  document.getElementById("subject-menu").hidden = true;
+  document.getElementById("content-panel").hidden = false;
+  document.getElementById("content-title").textContent = lesson.title;
+  document.getElementById("content-body").textContent = lesson.content;
+  document.getElementById("quiz-feedback").textContent = "";
+  document.getElementById("quiz-actions").innerHTML = "";
+  document.getElementById("content-panel").scrollIntoView({behavior:"smooth"});
+}
+
+function startExercises() {
+  currentQuestion = 0;
+  currentScore = 0;
+  answered = false;
+  document.getElementById("subject-menu").hidden = true;
+  document.getElementById("content-panel").hidden = false;
+  document.getElementById("content-body").textContent = "";
+  renderQuestion();
+  document.getElementById("content-panel").scrollIntoView({behavior:"smooth"});
+}
+
+function renderQuestion() {
+  const questions = quizBank[currentSubject] || [];
+  document.getElementById("content-title").textContent = "Exercices — " + subjectNames[currentSubject];
+  document.getElementById("quiz-feedback").textContent = "";
+  const actions = document.getElementById("quiz-actions");
+  actions.innerHTML = "";
+
+  if (currentQuestion >= questions.length) {
+    document.getElementById("content-body").textContent =
+      "Exercices terminés ! Score : " + currentScore + " / " + questions.length;
+    const again = document.createElement("button");
+    again.textContent = "Recommencer les exercices";
+    again.onclick = startExercises;
+    actions.appendChild(again);
+    return;
+  }
+
+  const item = questions[currentQuestion];
+  document.getElementById("content-body").textContent =
+    "Question " + (currentQuestion + 1) + " / " + questions.length + "\n\n" + item.q;
+
+  item.options.forEach((option, index) => {
+    const button = document.createElement("button");
+    button.className = "option";
+    button.textContent = option;
+    button.onclick = () => checkAnswer(index);
+    actions.appendChild(button);
+  });
+  answered = false;
+}
+
+function checkAnswer(index) {
+  if (answered) return;
+  answered = true;
+  const item = quizBank[currentSubject][currentQuestion];
+  if (index === item.answer) currentScore++;
+  document.getElementById("quiz-feedback").textContent =
+    (index === item.answer ? "Bonne réponse ! " : "Réponse incorrecte. ") +
+    item.why + "\nScore provisoire : " + currentScore;
+
+  const actions = document.getElementById("quiz-actions");
+  actions.innerHTML = "";
+  const next = document.createElement("button");
+  next.textContent = currentQuestion + 1 === quizBank[currentSubject].length
+    ? "Voir mon résultat" : "Question suivante";
+  next.onclick = () => {
+    currentQuestion++;
+    renderQuestion();
+  };
+  actions.appendChild(next);
+}
+
+function backToSubjectMenu() {
+  document.getElementById("content-panel").hidden = true;
+  document.getElementById("subject-menu").hidden = false;
+}
+
+function backToSubjects() {
+  document.getElementById("subject-menu").hidden = true;
+  document.getElementById("content-panel").hidden = true;
+  document.getElementById("subjects").hidden = false;
+  document.getElementById("subjects").scrollIntoView({behavior:"smooth"});
+}
+
+</script>
+</body>
+</html>
